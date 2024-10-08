@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net7.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="boards\**" />
+    <EmbeddedResource Remove="boards\**" />
+    <None Remove="boards\**" />
+    <Page Remove="boards\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="images\deletePinGraphic.png" />
+    <None Remove="images\miniSettingGraphic.png" />
+    <None Remove="images\moveGraphic.png" />
+    <None Remove="images\newDefinitionGraphic.png" />
+    <None Remove="images\newListGraphic.png" />
+    <None Remove="images\newPinGraphic.png" />
+    <None Remove="images\pushpingraphic.png" />
+    <None Remove="images\saveGraphic.png" />
+    <None Remove="images\settingGraphic.png" />
+    <None Remove="searchGraphic.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="bin\Debug\net7.0-windows\boards\FunctionalRequirements.json" />
+    <Content Include="bin\Debug\net7.0-windows\boards\ryliebday.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\deletePinGraphic.png" />
+    <Resource Include="images\miniSettingGraphic.png" />
+    <Resource Include="images\moveGraphic.png" />
+    <Resource Include="images\newDefinitionGraphic.png" />
+    <Resource Include="images\newListGraphic.png" />
+    <Resource Include="images\newPinGraphic.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="images\pushpingraphic.png" />
+    <Resource Include="images\saveGraphic.png" />
+    <Resource Include="images\settingGraphic.png" />
+    <Resource Include="searchGraphic.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="CompileSetupWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="QuizWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="QuizSetupWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="QuizSetupWindow.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+
+</Project>

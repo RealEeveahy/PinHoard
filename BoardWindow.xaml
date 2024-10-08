@@ -1,0 +1,56 @@
+﻿<Window x:Class="PinHoard.BoardWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PinHoard"
+        mc:Ignorable="d"
+        Title="BoardWindow" Height="700" Width="800">
+    <Grid x:Name="MainGrid">
+        <ScrollViewer x:Name="PinScrollViewer" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Auto" Margin="0,30,0,0">
+            <Grid x:Name="PinGrid" Background="#FFF9F0E0"/>
+        </ScrollViewer>
+        <Grid x:Name="ReadabiltyGrid" Height="30" VerticalAlignment="Top" Background="#FFEFEFEF">
+            <Label x:Name="FilterLabel" Content="Filter by:" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="200,0" FontSize="10"/>
+            <TextBox x:Name="FilterEntry" Height="20" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50,5" Background="White" FontSize="10"/>
+            <Button x:Name="FilterConfirmButton" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,5">
+                <Button.Background>
+                    <ImageBrush ImageSource="/searchGraphic.png"/>
+                </Button.Background>
+            </Button>
+        </Grid>
+        <Grid x:Name="ToolbarGrid" Width="80" HorizontalAlignment="Left">
+            <Border x:Name="ToolContainer" Background="#FFF69176"/>
+            <Button x:Name="NewPinButton" Tag="single" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,20,0,0" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/newPinGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+            <Button x:Name="NewDefinitionButton" Tag="double" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,100,0,0" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/newDefinitionGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+            <Button x:Name="NewListButton" Tag="multi" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,180,0,0" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/newListGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+            <Button x:Name="MovePinButton" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,260,0,0" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/moveGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+            <Button x:Name="DeletePinButton" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,340,0,0" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/deletePinGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+            <Button x:Name="SaveBoardButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Height="60" FontSize="30" Margin="0,0,0,20" Background="#FFFCF8F3">
+                <Grid>
+                    <Image Source="/images/saveGraphic.png" Stretch="Fill"/>
+                </Grid>
+            </Button>
+        </Grid>
+    </Grid>
+</Window>
