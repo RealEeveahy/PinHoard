@@ -26,13 +26,10 @@ namespace PinHoard
         public string boardName = string.Empty; //when a new board is created it has no name. this will be updated on load
         public bool readOnly = false;
         public bool closeAfterSave = false; // changed by the fileSaveWindow
-        public List<Pin> pins = new List<Pin>();
-        public List<DefinitionPin> definitions = new List<DefinitionPin>();
-        public List<MultiPin> multiPins = new List<MultiPin>();
+        public List<BasePin> allPins = new List<BasePin>();
 
         private FileSaveWindow? mySaveWindow = null;
         public int pinsInBoard = 0, subPinCount = 0;
-        //public Vector2 lastPos = new Vector2();
         public int pinWidth = 120, pinHeight = 120; //default size for pins
 
         readonly float saveLoadVersion = 1.1f; //increment by .1 any time the saving / loading system is updated
@@ -61,32 +58,29 @@ namespace PinHoard
             hwArray[0] = pinHeight;
             hwArray[1] = pinWidth;
 
-            dynamic thisPin = null;
-            if(pinType == "single")
+            BasePin thisPin = new BasePin(PinGrid, this, pinsInBoard, hwArray, windowDimensions);
+            if (pinType == "single")
             {
-                thisPin = new Pin(PinGrid, this, pinsInBoard, hwArray, windowDimensions);
-                pins.Add(thisPin);
+                thisPin.InitComponent("content", "This is a pin!", null);
             }
             else if(pinType == "double")
             {
-                thisPin = new DefinitionPin(PinGrid, this, pinsInBoard, hwArray, windowDimensions);
-                definitions.Add(thisPin);
+                thisPin.InitComponent("title", "This is a title.", null);
+                thisPin.InitComponent("content", "And this is it's description!", null);
             }
             else if(pinType == "multi")
             {
-                List<string> multiContent = new List<string>();
-
-                thisPin = new MultiPin(PinGrid, this, pinsInBoard, hwArray, windowDimensions, multiContent);
-                multiPins.Add(thisPin);
+                thisPin.InitComponent("title", "Title.", null);
+                List<string> sL = new List<string> { "This is my first point", "This is my second point", "And here's a third!" };
+                thisPin.InitComponent("list", null, sL);
             }
 
             if (thisPin == null) return;
 
+            allPins.Add(thisPin);
             PinGrid.Children.Add(thisPin.NoteGrid);
             pinsInBoard++;
-            thisPin.orderInBoard = pinsInBoard;
         }
-
         public void OnWindowResize(object sender, SizeChangedEventArgs e)
         {
             windowDimensions[0] = e.NewSize.Width;
@@ -96,63 +90,32 @@ namespace PinHoard
         }
         public void FilterClicked(object sender, RoutedEventArgs e)
         {
+            foreach (BasePin bp in allPins) { bp.NoteGrid.Visibility = Visibility.Visible; }
             string searchTerm = FilterEntry.Text;
+            if(searchTerm == string.Empty) return;
+
             subPinCount = 0;
 
-            foreach(Pin single in pins)
-            {
-                if(single.rawPinContent.ToLower().Contains(searchTerm.ToLower()))
-                {
-                    subPinCount++;
-                    single.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
-                }
-                else
-                {
-                    single.NoteGrid.Visibility = Visibility.Collapsed;
-                }
-            }
-            foreach(DefinitionPin def in definitions)
-            {
-                if (def.rawDefinitionContent.ToLower().Contains(searchTerm.ToLower()) || def.rawTermContent.ToLower().Contains(searchTerm.ToLower()))
-                {
-                    subPinCount++;
-                    def.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
-                }
-                else
-                {
-                    def.NoteGrid.Visibility = Visibility.Collapsed;
-                }
-            }
-            foreach(MultiPin multi in multiPins)
+            foreach(BasePin bp in allPins)
             {
                 bool matchFound = false;
-                foreach(string s in multi.rawContentList)
+                foreach (string s in bp.rawStringList)
                 {
                     if (s.ToLower().Contains(searchTerm.ToLower()))
                     {
                         matchFound = true;
-                        multi.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
+                        bp.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
                     }
                 }
-                if(multi.rawTitleContent.ToLower().Contains(searchTerm.ToLower()))
+                if (!matchFound)
                 {
-                    matchFound = true;
-                    multi.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
-                }
-                else
-                {
-                    multi.NoteGrid.Visibility = Visibility.Collapsed;
+                    bp.NoteGrid.Visibility = Visibility.Collapsed;
                 }
                 subPinCount += matchFound ? 1 : 0;
             }
         }
         public void RecalculateAllPositions()
         {
-            List<BasePin> allPins = new List<BasePin>();
-            allPins.AddRange(pins);
-            allPins.AddRange(definitions);
-            allPins.AddRange(multiPins);
-
             foreach(BasePin p in allPins)
             {
                 p.CalculateMyPosition(windowDimensions);
@@ -180,71 +143,13 @@ namespace PinHoard
                 {
                     float fileVersion = data.version;
 
-                    if (fileVersion == saveLoadVersion) //file is formatted appropriately 
+                    if (fileVersion == 1.2f) //file is formatted appropriately 
                     {
-                        List<PinDataObject>? contents = data.myPinObjects;
-
-                        if (contents != null)
-                        {
-                            foreach (PinDataObject pdo in contents)
-                            {
-                                if (pdo.stringList != null)
-                                {
-                                    if (pdo.stringList.Count == 1)
-                                    {
-                                        Pin newPin = new Pin(PinGrid, this, pinsInBoard, hwArray, windowDimensions, "#FFFCF8F3", pdo.stringList[0]);
-                                        PinGrid.Children.Add(newPin.NoteGrid);
-
-                                        pins.Add(newPin);
-                                    }
-                                    else if(pdo.stringList.Count == 2)
-                                    {
-                                        DefinitionPin newDefinition = new DefinitionPin(PinGrid, this, pinsInBoard, hwArray, windowDimensions, "#FFFCF8F3",
-                                            pdo.stringList[0], pdo.stringList[1]);
-                                        PinGrid.Children.Add(newDefinition.NoteGrid);
-
-                                        definitions.Add(newDefinition);
-                                    }
-                                    else if(pdo.stringList.Count > 2)
-                                    {
-                                        //get and remove the title string from the list
-                                        string t = pdo.stringList[0];
-                                        pdo.stringList.RemoveAt(0);
-
-                                        MultiPin newMulti = new MultiPin(PinGrid, this, pinsInBoard, hwArray, windowDimensions,
-                                            pdo.stringList, "#FFFCF8F3", t);
-                                        PinGrid.Children.Add(newMulti.NoteGrid);
-
-                                        multiPins.Add(newMulti);
-                                    }
-                                    pinsInBoard++;
-                                }
-                            }
-                        }
+                        //put the new load code here when save is changed
                     }
-                    else //file is using deprecated format. place old code here each version change
+                    else //file is using deprecated format. place old code in LegacyLoad.cs each version change
                     {
-                        List<string>? contents = data.myPins;
-
-                        for (int i = 0; i < contents.Count; i += 2)
-                        {
-                            if (string.IsNullOrEmpty(contents[i])) //tuple is a regular pin
-                            {
-                                Pin newPin = new Pin(PinGrid, this, pinsInBoard, hwArray, windowDimensions, contents[i + 1]);
-                                PinGrid.Children.Add(newPin.NoteGrid);
-
-                                pins.Add(newPin);
-                            }
-                            else //tuple is a definition (for now)
-                            {
-                                DefinitionPin newDefinition = new DefinitionPin(PinGrid, this, 
-                                    pinsInBoard, hwArray, windowDimensions, contents[i], contents[i + 1]);
-                                PinGrid.Children.Add(newDefinition.NoteGrid);
-
-                                definitions.Add(newDefinition);
-                            }
-                            pinsInBoard++;
-                        }
+                        LegacyLoad nLL = new LegacyLoad(fileVersion, data, this);
                     }
                     this.Title = boardName;
                 }
@@ -266,40 +171,17 @@ namespace PinHoard
             else { Console.WriteLine("Directory "+ directoryPath +" exists."); }
 
             List<PinDataObject> pinDataList = new List<PinDataObject>();
-            foreach (Pin p in pins)
-            {
-                List<string> contents = new List<string> { p.rawPinContent };
-                PinDataObject thisData = new PinDataObject
-                { 
-                    index = p.orderInBoard,
-                    stringList = contents
-                };
-                pinDataList.Add(thisData);
-            }
-            foreach (DefinitionPin d in definitions)
-            {
-                List<string> contents = new List<string> { d.TermBox.Text, d.rawDefinitionContent };
-                PinDataObject thisData = new PinDataObject
-                {
-                    index = d.orderInBoard,
-                    stringList = contents
-                };
-                pinDataList.Add(thisData);
-            }
-            foreach (MultiPin m in multiPins)
+            foreach (BasePin bp in allPins)
             {
                 List<string> contents = new List<string>();
-                contents.Insert(0, m.rawTitleContent);
-                foreach (string s in m.rawContentList) contents.Add(s);
-
+                foreach (string s in bp.rawStringList) contents.Add(s);
                 PinDataObject thisData = new PinDataObject
                 {
-                    index = m.orderInBoard,
+                    index = bp.orderInBoard,
                     stringList = contents
                 };
                 pinDataList.Add(thisData);
             }
-
             try
             {
                 if (boardName == string.Empty) //when opened as a new board, prompt for a file name
@@ -307,7 +189,7 @@ namespace PinHoard
                     mySaveWindow = new FileSaveWindow(this);
                     mySaveWindow.ShowDialog();
                 }
-                if (boardName != string.Empty) //if a file name was not entered, do not save
+                if (boardName != string.Empty) //if a file name was not entered, do not save new
                 {
                     SaveData data = new SaveData
                     {
@@ -350,18 +232,22 @@ namespace PinHoard
             public Grid NoteGrid { get; private set; }
             public Image PinImage {  get; private set; }
             public Border PinBorder { get; private set; }
+            StackPanel MainStack = new StackPanel();
+            public List<string> rawStringList = new List<string>();
+            public List<PinComponent> componentList = new List<PinComponent>();
+            public int orderInBoard; //irrelevant when filtering, find a new way to assign positions
+            public int width, height;
+            public int[] myPosition = new int[2]; //ACTUAL position
+            public int totalLines = 1;
             public bool isBeingDragged;
             public bool hidden;
             public Point startPoint;
             public Grid NoteParent;
             public string? type;
-            public int orderInBoard; //irrelevant when filtering, find a new way to assign positions
-            public int width, height;
             public Vector2 xyCoord = new Vector2(); //coordinate position
-            public int[] myPosition = new int[2]; //ACTUAL position
-            public int lines = 1;
+
             public string bgColour = string.Empty;
-            protected BasePin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize, string colour = "#FFFCF8F3")
+            public BasePin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize, string colour = "#FFFCF8F3")
             {
                 NoteParent = parent;
                 width = hwArray[1];
@@ -398,6 +284,29 @@ namespace PinHoard
                 //Add border and content to the grid
                 NoteGrid.Children.Add(PinBorder);
                 NoteGrid.Children.Add(PinImage);
+
+                PinBorder.Child = MainStack;
+            }
+            public void InitComponent(string name, string content, List<string> contentList)
+            {
+                PinComponent newComponent = null;
+                if(name == "content")//TEMPORARY**** FIND A MORE ROBUST WAY
+                {
+                    newComponent = new PinContent(componentList.Count, this, width-10, content);
+                    componentList.Add(newComponent);
+                }
+                else if(name == "title")
+                {
+                    newComponent = new TitleBox(componentList.Count, this, width-10, content);
+                    componentList.Add(newComponent);
+                }
+                else if(name == "list")
+                {
+                    newComponent = new ListBox(contentList, componentList.Count, this, width - 10);
+                }
+                MainStack.Children.Add(newComponent.wrapper);
+
+                PinResize();
             }
             public void CalculateMyPosition(double[] windowSize) // calls when the window size is changed and once on init
             {
@@ -445,146 +354,19 @@ namespace PinHoard
                 myPosition[0] = 85 + ((myX * width) + (myX * 5)); // x position,
                 myPosition[1] = 5 + ((heightSum) + (myY * 5)); // y position
             }
-            public void PinResize(string type, int lineCount)
+            public void PinResize()
             {
-                lines = lineCount;
+                totalLines = 0;
+                foreach (PinComponent pc in componentList) totalLines += pc.lines;
                 // separated by type because of title size discrepancy
-                if (type == "single")
-                {
-                    if (lines <= 5) height = 120;
-                    else height = 120 + ((lines - 5) * 15);
-                }
-                else if (type == "double")
-                {
-                    if (lines <= 4) height = 120;
-                    else height = 120 + ((lines - 4) * 15);
-                }
-                else if (type == "multi")
-                {
-                    if (lines <= 3) height = 120;
-                    else height = 120 + ((lines - 3) * 15);
-                }
+                if (totalLines <= 4) height = 120;
+                else height = 120 + ((totalLines - 4) * 15);
 
                 NoteGrid.Height = height;
                 myManager.RecalculateAllPositions();
             }
         }
-        public class Pin : BasePin
-        {
-            public PinContent myContent { get; private set; }
-            public string rawPinContent = string.Empty;
-            public Pin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize, string colour = "#FFFCF8F3",
-                string content = "This is a note!")
-                : base(parent, manager, index, hwArray, windowSize, colour)
-            {
-                type = "single";
-                rawPinContent = content;
-
-                //create content
-                myContent = new PinContent(content, this, hwArray[1] - 10);
-                PinBorder.Child = myContent.tb;
-
-                NoteGrid.MouseDown += (sender, e) =>
-                {
-                    myContent.tb.Focus();
-                    myContent.tb.Select(myContent.tb.Text.Length, 0);
-                };
-            }
-            public void OnInit()
-            {
-                myContent.tb.Focus();
-            }
-        }
-        public class DefinitionPin : BasePin
-        {
-            public TextBox TermBox { get; private set; }
-            public TextBox DefinitionBox { get; private set; }
-            public string rawTermContent = string.Empty;
-            public string rawDefinitionContent = string.Empty;
-            public DefinitionPin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize, string colour = "#FFFCF8F3",
-                string term = "This is a term.", string definition = "And this is it's definition!")
-                : base(parent, manager, index, hwArray, windowSize, colour)
-            {
-                type = "double";
-                //create a textbox to hold the definition's term
-                TermBox = new TextBox();
-                TermBox.Text = term;
-                rawTermContent = term;
-                TermBox.HorizontalAlignment = HorizontalAlignment.Center;
-                TermBox.HorizontalContentAlignment = HorizontalAlignment.Center;
-                TermBox.VerticalAlignment = VerticalAlignment.Top;
-                TermBox.MinWidth = hwArray[1] - 10;
-                TermBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFCF8F3"));
-                TermBox.BorderThickness = new Thickness(0, 0, 0, 2);
-                TermBox.Margin = new Thickness(0, 6, 0, 0);
-                TermBox.FontSize = 14;
-
-                //create a textbox to hold the definition
-                DefinitionBox = new TextBox();
-                DefinitionBox.Text = definition;
-                rawDefinitionContent = definition;
-                DefinitionBox.HorizontalAlignment = HorizontalAlignment.Center;
-                DefinitionBox.VerticalAlignment = VerticalAlignment.Center;
-                DefinitionBox.MaxWidth = hwArray[1] - 10;
-                DefinitionBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFCF8F3"));
-                DefinitionBox.BorderThickness = new Thickness(0, 0, 0, 0);
-
-                PinBorder.Child = new StackPanel
-                {
-                    Children = { TermBox, DefinitionBox }
-                };
-
-                //TermBox.TextChanged += TextChangeHandler;
-                DefinitionBox.TextChanged += TextChangeHandler;
-
-                TextChangeHandler(this, null);
-
-                NoteGrid.MouseDown += (sender, e) =>
-                {
-                    DefinitionBox.Focus();
-                    DefinitionBox.Select(DefinitionBox.Text.Length, 0);
-                };
-            }
-            public void OnInit()
-            {
-                TermBox.Focus();
-            }
-            private void TextChangeHandler(object sender, TextChangedEventArgs e)
-            {
-                DefinitionBox.TextChanged -= TextChangeHandler;
-
-                rawDefinitionContent = DefinitionBox.Text.Replace("\n", string.Empty);
-                StringBuilder newText = new StringBuilder();
-                int charCount = 0;
-                int lastWordIndex = 0;
-                int lineCount = 1;
-
-                foreach (char c in rawDefinitionContent)
-                {
-                    newText.Append(c);
-                    charCount++;
-                    if (c == ' ') lastWordIndex = newText.Length;
-
-                    if (charCount % 16 == 0)
-                    {
-                        newText.Insert(lastWordIndex, "\n");
-                        lineCount++;
-                    }
-                }
-                int caretPos = DefinitionBox.CaretIndex;
-                if (lines != lineCount) //if the no. of lines before changing text is different after, recalculate the pin height
-                {
-                    if (type != null) PinResize(type, lineCount);
-                }
-
-                DefinitionBox.Text = newText.ToString();
-
-                DefinitionBox.CaretIndex = Math.Min(caretPos + (DefinitionBox.Text.Length - rawDefinitionContent.Length), DefinitionBox.Text.Length);
-
-                DefinitionBox.TextChanged += TextChangeHandler;
-            }
-        }
-        public class MultiPin : BasePin
+        /*public class MultiPin : BasePin
         {
             public StackPanel MainStack = new StackPanel();
             public TextBox TitleBox { get; private set; }
@@ -676,6 +458,6 @@ namespace PinHoard
             { 
                 selectedPoint = (TextBox)sender;
             }
-        }
+        }*/
     }
 }

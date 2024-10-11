@@ -23,8 +23,8 @@
     <None Remove="images\newPinGraphic.png" />
     <None Remove="images\pushpingraphic.png" />
     <None Remove="images\saveGraphic.png" />
+    <None Remove="images\searchGraphic.png" />
     <None Remove="images\settingGraphic.png" />
-    <None Remove="searchGraphic.png" />
   </ItemGroup>
 
   <ItemGroup>
@@ -44,8 +44,8 @@
   <ItemGroup>
     <Resource Include="images\pushpingraphic.png" />
     <Resource Include="images\saveGraphic.png" />
+    <Resource Include="images\searchGraphic.png" />
     <Resource Include="images\settingGraphic.png" />
-    <Resource Include="searchGraphic.png" />
   </ItemGroup>
 
   <ItemGroup>

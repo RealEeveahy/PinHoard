@@ -14,9 +14,9 @@
             <Label x:Name="FilterLabel" Content="Filter by:" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="200,0" FontSize="10"/>
             <TextBox x:Name="FilterEntry" Height="20" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50,5" Background="White" FontSize="10"/>
             <Button x:Name="FilterConfirmButton" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,5">
-                <Button.Background>
-                    <ImageBrush ImageSource="/searchGraphic.png"/>
-                </Button.Background>
+                <Grid>
+                    <Image Source="/images/searchGraphic.png"/>
+                </Grid>
             </Button>
         </Grid>
         <Grid x:Name="ToolbarGrid" Width="80" HorizontalAlignment="Left">
