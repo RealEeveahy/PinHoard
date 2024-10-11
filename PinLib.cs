@@ -82,6 +82,7 @@ namespace PinHoard
             TextChangeHandler(this, null);
 
             wrapper.Children.Add(tb);
+            tb.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
         }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
@@ -96,7 +97,7 @@ namespace PinHoard
             foreach (char c in parentPin.rawStringList[orderInPin])
             {
                 newText.Append(c);
-                charCount++;
+                if (c != '.' || c != ',') charCount++;
                 if (c == ' ') lastWordIndex = newText.Length;
 
                 if (charCount % 16 == 0)
@@ -147,7 +148,9 @@ namespace PinHoard
             tb.TextChanged += TextChangeHandler;
             TextChangeHandler(this, null);
 
+
             wrapper.Children.Add(tb);
+            tb.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
         }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
@@ -162,7 +165,7 @@ namespace PinHoard
             foreach (char c in parentPin.rawStringList[orderInPin])
             {
                 newText.Append(c);
-                charCount++;
+                if (c != '.' || c != ',') charCount++;
                 if (c == ' ') lastWordIndex = newText.Length;
 
                 if (charCount % 16 == 0)
@@ -255,6 +258,7 @@ namespace PinHoard
             wrapper.Children.Add(thisPoint);
 
             thisContent.TextChanged += TextChangeHandler;
+            thisContent.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
         }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
@@ -266,19 +270,25 @@ namespace PinHoard
                 StringBuilder newText = new StringBuilder();
                 int charCount = 0;
                 int lastWordIndex = 0;
+                int newLineCount = 1;
 
                 foreach (char c in parentPin.rawStringList[orderInPin])
                 {
                     newText.Append(c);
-                    charCount++;
+                    if (c != '.' || c != ',')  charCount++;
                     if (c == ' ') lastWordIndex = newText.Length;
 
-                    if (charCount % 12 == 0)
+                    if (charCount % 14 == 0)
                     {
                         newText.Insert(lastWordIndex, "\n");
                     }
                 }
                 int caretPos = thisContent.CaretIndex;
+                if (lines != newLineCount) //if the no. of lines before changing text is different after, recalculate the pin height
+                {
+                    lines = newLineCount;
+                    parentPin.PinResize();
+                }
 
                 thisContent.Text = newText.ToString();
 

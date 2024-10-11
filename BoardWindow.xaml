@@ -19,34 +19,66 @@
                 </Grid>
             </Button>
         </Grid>
-        <Grid x:Name="ToolbarGrid" Width="80" HorizontalAlignment="Left">
-            <Border x:Name="ToolContainer" Background="#FFF69176"/>
-            <Button x:Name="NewPinButton" Tag="single" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,20,0,0" Background="#FFFCF8F3">
+        <Grid x:Name="ToolbarGrid" Width="300" HorizontalAlignment="Left">
+            <Border x:Name="ToolContainer" Background="#FFF69176" Width="80" HorizontalAlignment="Left"/>
+            <Grid x:Name="PresetPopoutMenu" Tag="preset" Visibility="Collapsed" Width="340" HorizontalAlignment="Left" VerticalAlignment="Top" Height="80" Margin="10,10">
+                <Border Background="#FFF1623C"/>
+                <Grid x:Name="PresetPopoutContainer">
+                    <Button x:Name="NewPinButton" Tag="single" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" Height="60" FontSize="30" Margin="70,0,0,0" Background="#FFFCF8F3">
+                        <Grid>
+                            <Image Source="/images/newPinGraphic.png" Stretch="Fill"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="NewDefinitionButton" Tag="double" Margin="140,0" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Height="60" FontSize="30" Background="#FFFCF8F3">
+                        <Grid>
+                            <Image Source="/images/newDefinitionGraphic.png" Stretch="Fill"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="NewListButton" Tag="multi" HorizontalAlignment="Left" VerticalAlignment="Center" Width="60" Height="60" FontSize="30" Margin="210,0,0,0" Background="#FFFCF8F3">
+                        <Grid>
+                            <Image Source="/images/newListGraphic.png" Stretch="Fill"/>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Grid>
+            <Button x:Name="NewEmptyButton" Tag="empty" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" FontSize="30" Margin="10,20,0,0" Background="#FFFCF8F3">
                 <Grid>
-                    <Image Source="/images/newPinGraphic.png" Stretch="Fill"/>
+                    <Image Source="/images/newEmptyGraphic.png" Stretch="Fill"/>
                 </Grid>
             </Button>
-            <Button x:Name="NewDefinitionButton" Tag="double" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,100,0,0" Background="#FFFCF8F3">
+
+            <Grid x:Name="ComponentPopoutMenu" Tag="component" Visibility="Collapsed" Width="210" HorizontalAlignment="Left" VerticalAlignment="Top" Height="80" Margin="10,90">
+                <Border Background="#FFF1623C"/>
+                <Grid x:Name="ComponentPopoutContainer">
+                    <Button x:Name="NewTitleButton" Tag="title" VerticalAlignment="Center" HorizontalAlignment="Left" Width="60" Height="60" FontSize="30" Margin="70,0,0,0" Background="#FFFCF8F3">
+                        <Grid>
+                            <Image Source="/images/newTitleGraphic.png" Stretch="Fill"/>
+                        </Grid>
+                    </Button>
+                    <Button x:Name="NewBulletButton" Tag="list" Margin="10,0" HorizontalAlignment="Right" VerticalAlignment="Center" Width="60" Height="60" FontSize="30" Background="#FFFCF8F3">
+                        <Grid>
+                            <Image Source="/images/newBulletPointGraphic.png" Stretch="Fill"/>
+                        </Grid>
+                    </Button>
+                </Grid>
+            </Grid>
+            <Button x:Name="NewContentButton" Tag="content" VerticalAlignment="Top" HorizontalAlignment="Left" Width="60" Height="60" FontSize="30" Margin="10,100,0,0" Background="#FFFCF8F3">
                 <Grid>
-                    <Image Source="/images/newDefinitionGraphic.png" Stretch="Fill"/>
+                    <Image Source="/images/newContentGraphic.png" Stretch="Fill"/>
                 </Grid>
             </Button>
-            <Button x:Name="NewListButton" Tag="multi" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,180,0,0" Background="#FFFCF8F3">
-                <Grid>
-                    <Image Source="/images/newListGraphic.png" Stretch="Fill"/>
-                </Grid>
-            </Button>
-            <Button x:Name="MovePinButton" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,260,0,0" Background="#FFFCF8F3">
+
+            <Button x:Name="MovePinButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="10,180,0,0" Background="#FFFCF8F3">
                 <Grid>
                     <Image Source="/images/moveGraphic.png" Stretch="Fill"/>
                 </Grid>
             </Button>
-            <Button x:Name="DeletePinButton" HorizontalAlignment="Center" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="0,340,0,0" Background="#FFFCF8F3">
+            <Button x:Name="DeletePinButton" HorizontalAlignment="Left" VerticalAlignment="Top" Width="60" Height="60" FontSize="30" Margin="10,260,0,0" Background="#FFFCF8F3">
                 <Grid>
                     <Image Source="/images/deletePinGraphic.png" Stretch="Fill"/>
                 </Grid>
             </Button>
-            <Button x:Name="SaveBoardButton" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="60" Height="60" FontSize="30" Margin="0,0,0,20" Background="#FFFCF8F3">
+            <Button x:Name="SaveBoardButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="60" Height="60" FontSize="30" Margin="10,0,0,20" Background="#FFFCF8F3">
                 <Grid>
                     <Image Source="/images/saveGraphic.png" Stretch="Fill"/>
                 </Grid>

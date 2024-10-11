@@ -27,12 +27,13 @@ namespace PinHoard
         public bool readOnly = false;
         public bool closeAfterSave = false; // changed by the fileSaveWindow
         public List<BasePin> allPins = new List<BasePin>();
+        public BasePin? focusedPin;
 
         private FileSaveWindow? mySaveWindow = null;
         public int pinsInBoard = 0, subPinCount = 0;
         public int pinWidth = 120, pinHeight = 120; //default size for pins
 
-        readonly float saveLoadVersion = 1.1f; //increment by .1 any time the saving / loading system is updated
+        readonly float saveLoadVersion = 1.2f; //increment by .1 any time the saving / loading system is updated
 
         public double[] windowDimensions = new double[2] {800,700};
         public Dictionary<Vector2, object> CoordForPinDict = new Dictionary<Vector2, object>();
@@ -45,12 +46,35 @@ namespace PinHoard
             FilterConfirmButton.Click += FilterClicked;
             if (!r_o) // disable all the buttons if read only
             {
+                NewEmptyButton.MouseEnter += PopoutToolbar;
+                NewContentButton.MouseEnter += PopoutToolbar;
+
+                NewEmptyButton.Click += NewPinClicked;
                 NewPinButton.Click += NewPinClicked;
                 NewDefinitionButton.Click += NewPinClicked;
                 NewListButton.Click += NewPinClicked;
+
+                NewContentButton.Click += NewComponentClicked;
+                NewTitleButton.Click += NewComponentClicked;
+                NewBulletButton.Click += NewComponentClicked;
+
                 SaveBoardButton.Click += SaveAllPins;
             }
         }
+
+        private void NewComponentClicked(object sender, RoutedEventArgs e)
+        {
+            if (focusedPin == null)
+            {
+                MessageBox.Show($"Failed to add component: Please select a pin.", "Component Error", MessageBoxButton.OK);
+                return;
+            }
+
+                List<string> sL = new List<string> { "New component." };
+            focusedPin.InitComponent(((Button)sender).Tag.ToString(), "New component.", sL); 
+            //uses both parameters temporarily because types are differentiated by the first field
+        }
+
         private void NewPinClicked(object sender, RoutedEventArgs e) //functional - change soon
         {
             string pinType = ((Button)sender).Tag.ToString();
@@ -59,7 +83,11 @@ namespace PinHoard
             hwArray[1] = pinWidth;
 
             BasePin thisPin = new BasePin(PinGrid, this, pinsInBoard, hwArray, windowDimensions);
-            if (pinType == "single")
+            if (pinType == "empty")
+            {
+                //probably not necessary. just do default if tag is empty
+            }
+            else if (pinType == "single")
             {
                 thisPin.InitComponent("content", "This is a pin!", null);
             }
@@ -79,6 +107,7 @@ namespace PinHoard
 
             allPins.Add(thisPin);
             PinGrid.Children.Add(thisPin.NoteGrid);
+            focusedPin = thisPin; // a new pin will always be in focus for convenience
             pinsInBoard++;
         }
         public void OnWindowResize(object sender, SizeChangedEventArgs e)
@@ -121,6 +150,21 @@ namespace PinHoard
                 p.CalculateMyPosition(windowDimensions);
                 p.NoteGrid.Margin = new Thickness(p.myPosition[0], p.myPosition[1], 0, 0);
             }
+        }
+        public void PopoutToolbar(object sender, RoutedEventArgs e)
+        {
+            Grid popout = null;
+            if (((Button)sender).Tag.ToString() == "empty")
+                popout = PresetPopoutMenu;
+            else popout = ComponentPopoutMenu;
+
+            popout.Visibility = Visibility.Visible;
+            popout.MouseLeave += ClosePopout;
+        }
+        public void ClosePopout(object sender, RoutedEventArgs e)
+        {
+            ((Grid)sender).Visibility = Visibility.Collapsed;
+            ((Grid)sender).MouseLeave -= ClosePopout;
         }
         public void LoadAllPins(string loadBoard = "board")
         {
@@ -286,6 +330,7 @@ namespace PinHoard
                 NoteGrid.Children.Add(PinImage);
 
                 PinBorder.Child = MainStack;
+                PinBorder.MouseDown += (sender, e) => { myManager.focusedPin = this; };
             }
             public void InitComponent(string name, string content, List<string> contentList)
             {
@@ -358,7 +403,6 @@ namespace PinHoard
             {
                 totalLines = 0;
                 foreach (PinComponent pc in componentList) totalLines += pc.lines;
-                // separated by type because of title size discrepancy
                 if (totalLines <= 4) height = 120;
                 else height = 120 + ((totalLines - 4) * 15);
 
@@ -366,98 +410,5 @@ namespace PinHoard
                 myManager.RecalculateAllPositions();
             }
         }
-        /*public class MultiPin : BasePin
-        {
-            public StackPanel MainStack = new StackPanel();
-            public TextBox TitleBox { get; private set; }
-            public Button NewPointButton { get; private set; }
-            public List<PointBox> pointBoxes = new List<PointBox>();
-            public string rawTitleContent = string.Empty;
-            public List<string> rawContentList = new List<string>();
-            public TextBox? selectedPoint;
-            public MultiPin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize,
-                 List<string> contents, string colour = "#FFFCF8F3", string title = "This is a list.")
-                : base(parent, manager, index, hwArray, windowSize, colour)
-            {
-                type = "multi";
-                //create a textbox to hold the list's title
-                TitleBox = new TextBox();
-                TitleBox.Text = title;
-                rawTitleContent = title;
-                TitleBox.HorizontalAlignment = HorizontalAlignment.Center;
-                TitleBox.HorizontalContentAlignment = HorizontalAlignment.Center;
-                TitleBox.VerticalAlignment = VerticalAlignment.Top;
-                TitleBox.MinWidth = hwArray[1] - 10;
-                TitleBox.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFFCF8F3"));
-                TitleBox.BorderThickness = new Thickness(0, 0, 0, 2);
-                TitleBox.Margin = new Thickness(0, 6, 0, 0);
-                TitleBox.FontSize = 14;
-
-                NewPointButton = new Button
-                {
-                    HorizontalAlignment = HorizontalAlignment.Right,
-                    VerticalAlignment = VerticalAlignment.Top,
-                    Content = "+",
-                };
-                NewPointButton.Click += NewPointClicked;
-
-                if(contents == null || contents.Count < 1)
-                {
-                    contents = new List<string> { "This is my first point.", "And this is my second!"};
-                }
-                //create initial textboxes to hold list items
-                for (int i = 0; i < contents.Count; i++)
-                {
-                    PointBox pointPanel = new PointBox(contents[i], i, this, width);
-                    
-                    pointBoxes.Add(pointPanel);
-                }
-
-                NoteGrid.Children.Add(NewPointButton);
-                MainStack.Children.Add(TitleBox);
-                foreach(PointBox pb in pointBoxes) { MainStack.Children.Add(pb.wrapper); }
-                PinBorder.Child = MainStack;
-
-                //TextChangeHandler(this, null); //should do a line check for ALL points
-            }
-            public void OnInit()
-            {
-                TitleBox.Focus();
-            }
-            void NewPointClicked(object sender, RoutedEventArgs e)
-            {
-                //create the new pointbox
-                PointBox pb = new PointBox("New point.", MainStack.Children.Count-1, this, width);
-                MainStack.Children.Add(pb.wrapper);
-
-                //handle note resizing
-                PinResize(type, GetCurrentLineCount());
-            }
-            public void CheckLines()
-            {
-                if (lines != GetCurrentLineCount()) //if the no. of lines before changing text is different after, recalculate the pin height
-                {
-                    if (type != null) PinResize(type, GetCurrentLineCount());
-                }
-            }
-            public int GetCurrentLineCount()
-            {
-                int lineCount = 0;
-                foreach (PointBox sp in pointBoxes)
-                    foreach (object child in sp.wrapper.Children)
-                    {
-                        if (child is TextBox tb)
-                        {
-                            lineCount++; //increment for the one existing line
-                            lineCount += tb.Text.Count(c => c == '\n'); // increment for every line after
-                        }
-                    }
-                return lineCount;
-            }
-            private void PointClicked(object sender, RoutedEventArgs e)
-            { 
-                selectedPoint = (TextBox)sender;
-            }
-        }*/
     }
 }

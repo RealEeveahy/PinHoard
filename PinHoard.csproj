@@ -18,9 +18,13 @@
     <None Remove="images\deletePinGraphic.png" />
     <None Remove="images\miniSettingGraphic.png" />
     <None Remove="images\moveGraphic.png" />
+    <None Remove="images\newBulletPointGraphic.png" />
+    <None Remove="images\newContentGraphic.png" />
     <None Remove="images\newDefinitionGraphic.png" />
+    <None Remove="images\newEmptyGraphic.png" />
     <None Remove="images\newListGraphic.png" />
     <None Remove="images\newPinGraphic.png" />
+    <None Remove="images\newTitleGraphic.png" />
     <None Remove="images\pushpingraphic.png" />
     <None Remove="images\saveGraphic.png" />
     <None Remove="images\searchGraphic.png" />
@@ -36,9 +40,13 @@
     <Resource Include="images\deletePinGraphic.png" />
     <Resource Include="images\miniSettingGraphic.png" />
     <Resource Include="images\moveGraphic.png" />
+    <Resource Include="images\newBulletPointGraphic.png" />
+    <Resource Include="images\newContentGraphic.png" />
     <Resource Include="images\newDefinitionGraphic.png" />
+    <Resource Include="images\newEmptyGraphic.png" />
     <Resource Include="images\newListGraphic.png" />
     <Resource Include="images\newPinGraphic.png" />
+    <Resource Include="images\newTitleGraphic.png" />
   </ItemGroup>
 
   <ItemGroup>
