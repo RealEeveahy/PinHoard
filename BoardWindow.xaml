@@ -11,13 +11,19 @@
             <Grid x:Name="PinGrid" Background="#FFF9F0E0"/>
         </ScrollViewer>
         <Grid x:Name="ReadabiltyGrid" Height="30" VerticalAlignment="Top" Background="#FFEFEFEF">
-            <Label x:Name="FilterLabel" Content="Filter by:" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="200,0" FontSize="10"/>
-            <TextBox x:Name="FilterEntry" Height="20" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50,5" Background="White" FontSize="10"/>
-            <Button x:Name="FilterConfirmButton" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,5">
-                <Grid>
-                    <Image Source="/images/searchGraphic.png"/>
-                </Grid>
-            </Button>
+            <Grid x:Name="ColourPickContainer" HorizontalAlignment="Center" Width="165" Margin="130,0,0,0">
+                <Label Content="Colour:" HorizontalAlignment="Left" FontSize="10"/>
+                <Button x:Name="ColourPickButton" HorizontalAlignment="Right" Width="120" Height="20" Background="#FFF3F3F3" BorderBrush="#FF707070"/>
+            </Grid>
+            <Grid x:Name="FilterContainer">
+                <Label x:Name="FilterLabel" Content="Filter by:" Height="30" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="200,0" FontSize="10"/>
+                <TextBox x:Name="FilterEntry" Height="20" Width="150" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="50,5" Background="White" FontSize="10"/>
+                <Button x:Name="FilterConfirmButton" Height="20" Width="20" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="30,5">
+                    <Grid>
+                        <Image Source="/images/searchGraphic.png"/>
+                    </Grid>
+                </Button>
+            </Grid>
         </Grid>
         <Grid x:Name="ToolbarGrid" Width="300" HorizontalAlignment="Left">
             <Border x:Name="ToolContainer" Background="#FFF69176" Width="80" HorizontalAlignment="Left"/>
@@ -77,6 +83,12 @@
                 <Grid>
                     <Image Source="/images/deletePinGraphic.png" Stretch="Fill"/>
                 </Grid>
+            </Button>
+
+            <Button x:Name="DebugButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="60" Height="60" FontSize="30" Margin="10,0,0,90" Background="#FFFCF8F3">
+            <Grid>
+                <Image Source="/images/debugGraphic.png" Stretch="Fill"/>
+            </Grid>
             </Button>
             <Button x:Name="SaveBoardButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="60" Height="60" FontSize="30" Margin="10,0,0,20" Background="#FFFCF8F3">
                 <Grid>

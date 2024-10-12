@@ -35,7 +35,7 @@ namespace PinHoard
             {
                 if (string.IsNullOrEmpty(contents[i])) //tuple is a regular pin
                 {
-                    BasePin newPin = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions, "#FFFCF8F3");
+                    BasePin newPin = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions);
                     newPin.InitComponent("content", contents[i + 1], null);
                     Board.PinGrid.Children.Add(newPin.NoteGrid);
 
@@ -44,7 +44,7 @@ namespace PinHoard
                 else //tuple is a definition
                 {
                     BasePin newDefinition = new BasePin(Board.PinGrid, Board,
-                        Board.pinsInBoard, hwArray, Board.windowDimensions, "#FFFCF8F3");
+                        Board.pinsInBoard, hwArray, Board.windowDimensions);
                     newDefinition.InitComponent("title", contents[i], null);
                     newDefinition.InitComponent("content", contents[i + 1], null);
                     Board.PinGrid.Children.Add(newDefinition.NoteGrid);
@@ -70,7 +70,7 @@ namespace PinHoard
                     {
                         if (pdo.stringList.Count == 1)
                         {
-                            BasePin newPin = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions, "#FFFCF8F3");
+                            BasePin newPin = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions);
                             newPin.InitComponent("content", pdo.stringList[0], null);
 
                             Board.PinGrid.Children.Add(newPin.NoteGrid);
@@ -78,7 +78,7 @@ namespace PinHoard
                         }
                         else if(pdo.stringList.Count == 2)
                         {
-                            BasePin newDefinition = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions, "#FFFCF8F3");
+                            BasePin newDefinition = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions);
                             newDefinition.InitComponent("title", pdo.stringList[0], null);
                             newDefinition.InitComponent("content", pdo.stringList[1], null);
 
@@ -91,7 +91,7 @@ namespace PinHoard
                             string t = pdo.stringList[0];
                             pdo.stringList.RemoveAt(0);
 
-                            BasePin newMulti = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions, "#FFFCF8F3");
+                            BasePin newMulti = new BasePin(Board.PinGrid, Board, Board.pinsInBoard, hwArray, Board.windowDimensions);
                             newMulti.InitComponent("title", t, null);
                             newMulti.InitComponent("list", null, pdo.stringList);//temp
 

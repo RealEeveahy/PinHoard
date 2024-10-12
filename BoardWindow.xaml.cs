@@ -15,6 +15,8 @@ using System.Text.Json;
 using System.IO;
 using System.Windows.Shapes;
 using System.Reflection.Metadata;
+//using System.Drawing;
+using MediaColour = System.Windows.Media.Color;
 
 namespace PinHoard
 {
@@ -24,13 +26,14 @@ namespace PinHoard
     public partial class BoardWindow : Window
     {
         public string boardName = string.Empty; //when a new board is created it has no name. this will be updated on load
-        public bool readOnly = false;
+        public bool readOnly = false, debugging = false;
         public bool closeAfterSave = false; // changed by the fileSaveWindow
         public List<BasePin> allPins = new List<BasePin>();
+        public List<BasePin> filteredPinList = new List<BasePin> ();
         public BasePin? focusedPin;
 
         private FileSaveWindow? mySaveWindow = null;
-        public int pinsInBoard = 0, subPinCount = 0;
+        public int pinsInBoard = 0; //subPinCount = 0;
         public int pinWidth = 120, pinHeight = 120; //default size for pins
 
         readonly float saveLoadVersion = 1.2f; //increment by .1 any time the saving / loading system is updated
@@ -44,6 +47,7 @@ namespace PinHoard
             this.SizeChanged += OnWindowResize;
 
             FilterConfirmButton.Click += FilterClicked;
+            DebugButton.Click += ToggleDebug;
             if (!r_o) // disable all the buttons if read only
             {
                 NewEmptyButton.MouseEnter += PopoutToolbar;
@@ -58,6 +62,7 @@ namespace PinHoard
                 NewTitleButton.Click += NewComponentClicked;
                 NewBulletButton.Click += NewComponentClicked;
 
+                ColourPickButton.Click += ColourChangeClicked;
                 SaveBoardButton.Click += SaveAllPins;
             }
         }
@@ -120,34 +125,46 @@ namespace PinHoard
         public void FilterClicked(object sender, RoutedEventArgs e)
         {
             foreach (BasePin bp in allPins) { bp.NoteGrid.Visibility = Visibility.Visible; }
+            filteredPinList.Clear();
             string searchTerm = FilterEntry.Text;
             if(searchTerm == string.Empty) return;
-
-            subPinCount = 0;
 
             foreach(BasePin bp in allPins)
             {
                 bool matchFound = false;
-                foreach (string s in bp.rawStringList)
+                foreach ((string,string) s in bp.rawStringList)
                 {
-                    if (s.ToLower().Contains(searchTerm.ToLower()))
+                    if ((s.Item1).ToLower().Contains(searchTerm.ToLower()))
                     {
+                        if (!matchFound) { filteredPinList.Add(bp); }
                         matchFound = true;
-                        bp.NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#BB6666"));
                     }
                 }
                 if (!matchFound)
                 {
                     bp.NoteGrid.Visibility = Visibility.Collapsed;
                 }
-                subPinCount += matchFound ? 1 : 0;
             }
+            RecalculateAllPositions(true);
         }
-        public void RecalculateAllPositions()
+        public void ToggleDebug(object sender, RoutedEventArgs e)
         {
-            foreach(BasePin p in allPins)
+            debugging ^= true;
+            PinGrid.Cursor = debugging? Cursors.Help : Cursors.Arrow;
+        }
+        public void RecalculateAllPositions(bool filtered = false)
+            //this method is very strange looking but works, and doesnt use a bunch of if-elses
+        {
+            ref List<BasePin> selectedList = ref allPins;
+            if(filtered) selectedList = ref filteredPinList;
+
+            int subOrder = -1;
+
+            foreach(BasePin p in selectedList)
             {
-                p.CalculateMyPosition(windowDimensions);
+                if(filtered) subOrder++;
+
+                p.CalculateMyPosition(windowDimensions, subOrder);
                 p.NoteGrid.Margin = new Thickness(p.myPosition[0], p.myPosition[1], 0, 0);
             }
         }
@@ -165,6 +182,15 @@ namespace PinHoard
         {
             ((Grid)sender).Visibility = Visibility.Collapsed;
             ((Grid)sender).MouseLeave -= ClosePopout;
+        }
+        public void ColourChangeClicked(object sender, RoutedEventArgs e)
+        {
+            if (focusedPin == null) return;
+
+            List<string> colourList = new List<string> { "#BB5599", "#11EEBB", "#66AA44" };
+            Random r = new Random();
+
+            focusedPin.ChangeColour(colourList[r.Next(colourList.Count)]);
         }
         public void LoadAllPins(string loadBoard = "board")
         {
@@ -189,7 +215,29 @@ namespace PinHoard
 
                     if (fileVersion == 1.2f) //file is formatted appropriately 
                     {
-                        //put the new load code here when save is changed
+                        List<PinDataObject>? pinObjects = data.myPinObjects;
+                        if (pinObjects == null) return;
+
+                        foreach(PinDataObject po in pinObjects)
+                        {
+                            if (po.myComponentObjects == null) return;
+                            List<ComponentDataObject> componentObjects = po.myComponentObjects;
+
+                            BasePin newPin = new BasePin(PinGrid, this, pinsInBoard, hwArray, windowDimensions, po.bgColour);
+                            foreach(ComponentDataObject co in componentObjects)
+                            {
+                                //fix in the future, multiple bulletpoints should be grouped into a list.
+                                //either cache here or group in the save function
+                                List<string> sL = new List<string>();
+                                if(co.format == "list") { sL.Add(co.stringContent); } 
+
+                                newPin.InitComponent(co.format, co.stringContent, sL);
+                            }
+
+                            allPins.Add(newPin);
+                            PinGrid.Children.Add(newPin.NoteGrid);
+                            pinsInBoard++;
+                        }
                     }
                     else //file is using deprecated format. place old code in LegacyLoad.cs each version change
                     {
@@ -217,12 +265,21 @@ namespace PinHoard
             List<PinDataObject> pinDataList = new List<PinDataObject>();
             foreach (BasePin bp in allPins)
             {
-                List<string> contents = new List<string>();
-                foreach (string s in bp.rawStringList) contents.Add(s);
+                List<ComponentDataObject> contents = new List<ComponentDataObject>();
+                foreach ((string,string) s in bp.rawStringList)
+                {
+                    ComponentDataObject componentDataObject = new ComponentDataObject
+                    {
+                        stringContent = s.Item1,
+                        format = s.Item2
+                    };
+                    contents.Add(componentDataObject);
+                }
                 PinDataObject thisData = new PinDataObject
                 {
                     index = bp.orderInBoard,
-                    stringList = contents
+                    myComponentObjects = contents,
+                    bgColour = bp.bgColour,
                 };
                 pinDataList.Add(thisData);
             }
@@ -267,8 +324,14 @@ namespace PinHoard
         public class PinDataObject
         {
             public int index;
-            public List<string>? stringList { get; set; }
+            public List<ComponentDataObject>? myComponentObjects { get; set; }
             public string bgColour { get; set; }
+            public List<string>? stringList { get; set; } //deprecated
+        }
+        public class ComponentDataObject
+        {
+            public string? stringContent { get; set; }
+            public string? format { get; set; }
         }
         public class BasePin
         {
@@ -277,19 +340,16 @@ namespace PinHoard
             public Image PinImage {  get; private set; }
             public Border PinBorder { get; private set; }
             StackPanel MainStack = new StackPanel();
-            public List<string> rawStringList = new List<string>();
+            public List<(string,string)> rawStringList = new List<(string c,string f)>(); //content, format
             public List<PinComponent> componentList = new List<PinComponent>();
             public int orderInBoard; //irrelevant when filtering, find a new way to assign positions
             public int width, height;
             public int[] myPosition = new int[2]; //ACTUAL position
             public int totalLines = 1;
             public bool isBeingDragged;
-            public bool hidden;
             public Point startPoint;
             public Grid NoteParent;
-            public string? type;
             public Vector2 xyCoord = new Vector2(); //coordinate position
-
             public string bgColour = string.Empty;
             public BasePin(Grid parent, BoardWindow manager, int index, int[] hwArray, double[] windowSize, string colour = "#FFFCF8F3")
             {
@@ -314,6 +374,7 @@ namespace PinHoard
                 PinBorder = new Border();
                 PinBorder.HorizontalAlignment = HorizontalAlignment.Center;
                 PinBorder.VerticalAlignment = VerticalAlignment.Center;
+                PinBorder.IsHitTestVisible = true;
 
                 // Create Image
                 PinImage = new Image();
@@ -330,36 +391,48 @@ namespace PinHoard
                 NoteGrid.Children.Add(PinImage);
 
                 PinBorder.Child = MainStack;
-                PinBorder.MouseDown += (sender, e) => { myManager.focusedPin = this; };
+                NoteGrid.MouseDown += (sender, e) => 
+                { 
+                    myManager.focusedPin = this; 
+                    manager.ColourPickButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(bgColour));
+
+                    if (myManager.debugging) ShowDebugInfo();
+                };
             }
-            public void InitComponent(string name, string content, List<string> contentList)
+            public void InitComponent(string format, string content, List<string> contentList)
             {
                 PinComponent newComponent = null;
-                if(name == "content")//TEMPORARY**** FIND A MORE ROBUST WAY
+                if(format == "content")//TEMPORARY**** FIND A MORE ROBUST WAY
                 {
                     newComponent = new PinContent(componentList.Count, this, width-10, content);
                     componentList.Add(newComponent);
                 }
-                else if(name == "title")
+                else if(format == "title")
                 {
                     newComponent = new TitleBox(componentList.Count, this, width-10, content);
                     componentList.Add(newComponent);
                 }
-                else if(name == "list")
+                else if(format == "list")
                 {
                     newComponent = new ListBox(contentList, componentList.Count, this, width - 10);
+                }
+                else
+                {
+                    MessageBox.Show("Format not recognised.", "Component Initialisation Error", MessageBoxButton.OK, MessageBoxImage.Error);
                 }
                 MainStack.Children.Add(newComponent.wrapper);
 
                 PinResize();
             }
-            public void CalculateMyPosition(double[] windowSize) // calls when the window size is changed and once on init
+            public void CalculateMyPosition(double[] windowSize, int subOrder = -1) // calls when the window size is changed and once on init
             {
                 int myX = 0; //this pin's column
                 int myY = 0; //this pin's row
+                int currentOrder = orderInBoard;
                 int maxWidth = (int)windowSize[0] - 95; // the width of the note panel, window size minus toolbar size
+                if(subOrder > -1) currentOrder = subOrder;
 
-                int xTotal = (orderInBoard * width + (orderInBoard * 5)); // the total distance (in a straight line) of this note from the origin
+                int xTotal = (currentOrder * width + (currentOrder * 5)); // the total distance (in a straight line) of this note from the origin
 
                 while(xTotal >= maxWidth)  
                 {
@@ -408,6 +481,26 @@ namespace PinHoard
 
                 NoteGrid.Height = height;
                 myManager.RecalculateAllPositions();
+            }
+            public void ChangeColour(string colour)
+            {
+                NoteGrid.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(colour));
+                bgColour = colour;
+            }
+            void ShowDebugInfo()
+            {
+                string componentsAsString = string.Empty;
+                foreach((string, string) sPair in rawStringList)
+                {
+                    componentsAsString += $"'{sPair.Item1}', ({sPair.Item2}) \n";
+                }
+
+                MessageBox.Show("Information about this Pin: \n" +
+                    $"Order  {orderInBoard}\n" +
+                    $"Dimensions    {width} x {height}\n" +
+                    $"Colour    {bgColour}\n" +
+                    $"Components    {componentsAsString}",
+                    "Mae's debug tool");
             }
         }
     }

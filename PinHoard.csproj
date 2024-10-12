@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="images\debugGraphic.png" />
     <None Remove="images\deletePinGraphic.png" />
     <None Remove="images\miniSettingGraphic.png" />
     <None Remove="images\moveGraphic.png" />
@@ -37,6 +38,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Resource Include="images\debugGraphic.png" />
     <Resource Include="images\deletePinGraphic.png" />
     <Resource Include="images\miniSettingGraphic.png" />
     <Resource Include="images\moveGraphic.png" />

@@ -54,6 +54,7 @@ namespace PinHoard
     public interface PinComponent
     {
         public StackPanel wrapper { get; set; }
+        public string format { get; set; }
         public int lines { get; set; }
     }
     public class PinContent : PinComponent //pin component for displaying plain text - default
@@ -62,12 +63,13 @@ namespace PinHoard
         public TextBox tb { get; private set; }
         public StackPanel wrapper { get; set; } = new StackPanel();
         int orderInPin;
+        public string format { get; set; } = "content";
         public int lines { get; set; } = 1;
         public PinContent(int order, BasePin parent, int width, string content = "This is a note!") 
         {
             parentPin = parent;
             orderInPin = order;
-            parentPin.rawStringList.Insert(order,content);
+            parentPin.rawStringList.Insert(order,(content, format));
             tb = new TextBox
             {
                 Text = content,
@@ -88,13 +90,13 @@ namespace PinHoard
         {
             tb.TextChanged -= TextChangeHandler;
 
-            parentPin.rawStringList[orderInPin] = tb.Text.Replace("\n", string.Empty);
+            parentPin.rawStringList[orderInPin] = (tb.Text.Replace("\n", string.Empty),format);
             StringBuilder newText = new StringBuilder();
             int charCount = 0;
             int lastWordIndex = 0;
             int newLineCount = 1;
 
-            foreach (char c in parentPin.rawStringList[orderInPin])
+            foreach (char c in parentPin.rawStringList[orderInPin].Item1)
             {
                 newText.Append(c);
                 if (c != '.' || c != ',') charCount++;
@@ -115,7 +117,7 @@ namespace PinHoard
 
             tb.Text = newText.ToString();
 
-            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Length), tb.Text.Length);
+            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), tb.Text.Length);
 
             tb.TextChanged += TextChangeHandler;
         }
@@ -126,12 +128,13 @@ namespace PinHoard
         public TextBox tb { get; private set; }
         public StackPanel wrapper { get; set; } = new StackPanel();
         int orderInPin;
+        public string format { get; set; } = "title";
         public int lines { get; set; } = 1;
         public TitleBox(int order, BasePin parent, int width, string content = "This is a title.")
         {
             parentPin = parent;
             orderInPin = order;
-            parentPin.rawStringList.Insert(order, content); //should be changed so title always has an order of 0
+            parentPin.rawStringList.Insert(order, (content, format)); //should be changed so title always has an order of 0
             tb = new TextBox()
             {
                 Text = content,
@@ -156,13 +159,13 @@ namespace PinHoard
         {
             tb.TextChanged -= TextChangeHandler;
 
-            parentPin.rawStringList[orderInPin] = tb.Text.Replace("\n", string.Empty);
+            parentPin.rawStringList[orderInPin] = (tb.Text.Replace("\n", string.Empty), format);
             StringBuilder newText = new StringBuilder();
             int charCount = 0;
             int lastWordIndex = 0;
             int newLineCount = 1;
 
-            foreach (char c in parentPin.rawStringList[orderInPin])
+            foreach (char c in parentPin.rawStringList[orderInPin].Item1)
             {
                 newText.Append(c);
                 if (c != '.' || c != ',') charCount++;
@@ -183,7 +186,7 @@ namespace PinHoard
 
             tb.Text = newText.ToString();
 
-            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Length), tb.Text.Length);
+            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), tb.Text.Length);
 
             tb.TextChanged += TextChangeHandler;
         }
@@ -192,6 +195,7 @@ namespace PinHoard
     {
         private BasePin parentPin;
         public StackPanel wrapper { get; set; } = new StackPanel();
+        public string format { get; set; } = "list";
         public int lines { get; set; } = 0;
         private int myWidth;
         public ListBox(List<string> contents, int startOrder, BasePin parent, int width)
@@ -224,6 +228,7 @@ namespace PinHoard
         public StackPanel thisPoint { get; private set; }
         public Ellipse bulletPoint { get; private set; }
         public TextBox thisContent { get; private set; }
+        public string format { get; set; } = "list";
         public int lines { get; set; } = 1;
         int orderInPin = 0;
         public PointBox(string content, int order, BasePin parent, int width, ListBox container)
@@ -231,7 +236,7 @@ namespace PinHoard
             orderInPin = order;
             parentPin = parent;
             wrapper = container.wrapper;
-            parentPin.rawStringList.Insert(order, content);
+            parentPin.rawStringList.Insert(order, (content,format));
             thisPoint = new StackPanel
             {
                 Orientation = Orientation.Horizontal,
@@ -266,13 +271,13 @@ namespace PinHoard
             {
                 thisContent.TextChanged -= TextChangeHandler;
 
-                parentPin.rawStringList[orderInPin] = thisContent.Text.Replace("\n", string.Empty);
+                parentPin.rawStringList[orderInPin] = (thisContent.Text.Replace("\n", string.Empty), format);
                 StringBuilder newText = new StringBuilder();
                 int charCount = 0;
                 int lastWordIndex = 0;
                 int newLineCount = 1;
 
-                foreach (char c in parentPin.rawStringList[orderInPin])
+                foreach (char c in parentPin.rawStringList[orderInPin].Item1)
                 {
                     newText.Append(c);
                     if (c != '.' || c != ',')  charCount++;
@@ -292,7 +297,7 @@ namespace PinHoard
 
                 thisContent.Text = newText.ToString();
 
-                thisContent.CaretIndex = Math.Min(caretPos + (thisContent.Text.Length - parentPin.rawStringList[orderInPin].Length), thisContent.Text.Length);
+                thisContent.CaretIndex = Math.Min(caretPos + (thisContent.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), thisContent.Text.Length);
 
                 thisContent.TextChanged += TextChangeHandler;
             }
