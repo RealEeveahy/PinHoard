@@ -140,6 +140,10 @@ namespace PinHoard
                     BoardWindow boardWindow = new BoardWindow(false);
                     boardWindow.Show();
                     boardWindow.LoadAllPins(fn);
+                    foreach(BoardWindow.BasePin bp in boardWindow.allPins) //one final attempt to have all pins correct size
+                    {
+                        bp.PinResize();
+                    }
                 };
                 BoardOptions.Click += (sender, e) =>
                 {

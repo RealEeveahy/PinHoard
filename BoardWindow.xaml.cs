@@ -48,7 +48,7 @@ namespace PinHoard
 
             FilterConfirmButton.Click += FilterClicked;
             DebugButton.Click += ToggleDebug;
-            if (!r_o) // disable all the buttons if read only
+            if (!r_o) // disable all the buttons if read onlyxx
             {
                 NewEmptyButton.MouseEnter += PopoutToolbar;
                 NewContentButton.MouseEnter += PopoutToolbar;
@@ -198,11 +198,10 @@ namespace PinHoard
             string directoryPath = System.IO.Path.Combine(currentPath, "boards");
             string filePath = System.IO.Path.Combine(directoryPath, $"{loadBoard}.json");
 
-            boardName = loadBoard;
-
             int[] hwArray = new int[2];
             hwArray[0] = pinHeight;
             hwArray[1] = pinWidth;
+            boardName = loadBoard;
 
             try
             {
@@ -243,7 +242,7 @@ namespace PinHoard
                     {
                         LegacyLoad nLL = new LegacyLoad(fileVersion, data, this);
                     }
-                    this.Title = boardName;
+                    this.Title = $"{boardName} [{fileVersion}]";
                 }
             }
             catch (Exception ex)
@@ -474,13 +473,26 @@ namespace PinHoard
             }
             public void PinResize()
             {
-                totalLines = 0;
-                foreach (PinComponent pc in componentList) totalLines += pc.lines;
-                if (totalLines <= 4) height = 120;
-                else height = 120 + ((totalLines - 4) * 15);
+                Application.Current.Dispatcher.Invoke(() =>
+                {
+                    NoteGrid.UpdateLayout();
 
-                NoteGrid.Height = height;
-                myManager.RecalculateAllPositions();
+                    totalLines = 0;
+                    foreach (PinComponent pc in componentList) totalLines += pc.lines;
+                    //if (totalLines <= 4) height = 120;
+                    //else height = 120 + ((totalLines - 4) * 15);
+                    height = 0;
+                    foreach (PinComponent pc in componentList)
+                    {
+                        //if (pc.wrapper.Height < 0) return;
+                        height += pc.GetHeight();
+                    }
+                    height += 40; //add 20 to each end
+
+                    if (height < 120) height = 120;
+                    NoteGrid.Height = height;
+                    myManager.RecalculateAllPositions();
+                });
             }
             public void ChangeColour(string colour)
             {
@@ -492,14 +504,15 @@ namespace PinHoard
                 string componentsAsString = string.Empty;
                 foreach((string, string) sPair in rawStringList)
                 {
-                    componentsAsString += $"'{sPair.Item1}', ({sPair.Item2}) \n";
+                    componentsAsString += $"\u0009'{sPair.Item1}', ({sPair.Item2}) \n";
                 }
 
                 MessageBox.Show("Information about this Pin: \n" +
                     $"Order  {orderInBoard}\n" +
-                    $"Dimensions    {width} x {height}\n" +
+                    $"Logical Dimensions    {width} x {height}\n" +
+                    $"Physical Dimensions   {NoteGrid.ActualWidth} x {NoteGrid.ActualHeight}\n" +
                     $"Colour    {bgColour}\n" +
-                    $"Components    {componentsAsString}",
+                    $"Components    \n{componentsAsString}",
                     "Mae's debug tool");
             }
         }

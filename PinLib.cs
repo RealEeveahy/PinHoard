@@ -56,6 +56,7 @@ namespace PinHoard
         public StackPanel wrapper { get; set; }
         public string format { get; set; }
         public int lines { get; set; }
+        public int GetHeight(); // expect different components to have unique objects that may define the overall height. use this to get them.
     }
     public class PinContent : PinComponent //pin component for displaying plain text - default
     {
@@ -85,6 +86,10 @@ namespace PinHoard
 
             wrapper.Children.Add(tb);
             tb.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
+        }
+        public int GetHeight()
+        {
+            return (int)tb.ActualHeight;
         }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
@@ -155,6 +160,10 @@ namespace PinHoard
             wrapper.Children.Add(tb);
             tb.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
         }
+        public int GetHeight()
+        {
+            return (int)tb.ActualHeight;
+        }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
             tb.TextChanged -= TextChangeHandler;
@@ -204,6 +213,10 @@ namespace PinHoard
             myWidth = width;
 
             List<PointBox> points = StringsToPoints(contents, startOrder);
+        }
+        public int GetHeight()
+        {
+            return 0;
         }
         List<PointBox> StringsToPoints(List<string> strings, int startOrder) //method for quickly turning a list into several points
         {
@@ -262,8 +275,14 @@ namespace PinHoard
             thisPoint.Children.Add(thisContent);
             wrapper.Children.Add(thisPoint);
 
+            TextChangeHandler(this, null);
+
             thisContent.TextChanged += TextChangeHandler;
             thisContent.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
+        }
+        public int GetHeight()
+        {
+            return (int)thisContent.ActualHeight;
         }
         private void TextChangeHandler(object sender, TextChangedEventArgs e)
         {
