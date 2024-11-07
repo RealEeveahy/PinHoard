@@ -17,6 +17,9 @@
             </ScrollViewer>
         </Grid>
 
+        <Label x:Name="FilterLabel" Margin="0,0,130,70" Content="Filter By" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <TextBox x:Name="FilterBox" Margin="0,0,20,75" Text="" HorizontalContentAlignment="Center" Width="100" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+
         <Label x:Name="QuestionCountLabel" Margin="0,0,130,45" Content="Questions" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
         <TextBox x:Name="QuestionCountBox" Margin="0,0,20,50" Text="10" HorizontalContentAlignment="Center" Width="100" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
 

@@ -48,7 +48,7 @@ namespace PinHoard
 
             FilterConfirmButton.Click += FilterClicked;
             DebugButton.Click += ToggleDebug;
-            if (!r_o) // disable all the buttons if read onlyxx
+            if (!r_o) // disable all the buttons if read only
             {
                 NewEmptyButton.MouseEnter += PopoutToolbar;
                 NewContentButton.MouseEnter += PopoutToolbar;
@@ -62,7 +62,7 @@ namespace PinHoard
                 NewTitleButton.Click += NewComponentClicked;
                 NewBulletButton.Click += NewComponentClicked;
 
-                ColourPickButton.Click += ColourChangeClicked;
+                ColourSaveButton.Click += ColourChangeClicked;
                 SaveBoardButton.Click += SaveAllPins;
             }
         }
@@ -79,7 +79,6 @@ namespace PinHoard
             focusedPin.InitComponent(((Button)sender).Tag.ToString(), "New component.", sL); 
             //uses both parameters temporarily because types are differentiated by the first field
         }
-
         private void NewPinClicked(object sender, RoutedEventArgs e) //functional - change soon
         {
             string pinType = ((Button)sender).Tag.ToString();
@@ -186,11 +185,21 @@ namespace PinHoard
         public void ColourChangeClicked(object sender, RoutedEventArgs e)
         {
             if (focusedPin == null) return;
+            List<char> hexletters = new List<char> {'A','B','C','D','E','F' };
+            string colourPickFetch = "#" + (RedAmtContainer.Text + GreenAmtContainer.Text + BlueAmtContainer.Text).ToUpper();
+            bool invalidColour = false;
 
-            List<string> colourList = new List<string> { "#BB5599", "#11EEBB", "#66AA44" };
-            Random r = new Random();
+            foreach(char c in colourPickFetch)
+            {
+                if (c == '#') continue;
+                else if (!System.Char.IsDigit(c) && !hexletters.Contains(c))
+                {
+                    invalidColour = true;
+                }
+            }
+            if (colourPickFetch.Length > 7) invalidColour = true;
 
-            focusedPin.ChangeColour(colourList[r.Next(colourList.Count)]);
+            if(!invalidColour) focusedPin.ChangeColour(colourPickFetch);
         }
         public void LoadAllPins(string loadBoard = "board")
         {
@@ -392,8 +401,12 @@ namespace PinHoard
                 PinBorder.Child = MainStack;
                 NoteGrid.MouseDown += (sender, e) => 
                 { 
-                    myManager.focusedPin = this; 
-                    manager.ColourPickButton.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString(bgColour));
+                    myManager.focusedPin = this;
+
+
+                    myManager.RedAmtContainer.Text = bgColour.Substring(1, 2);
+                    myManager.GreenAmtContainer.Text = bgColour.Substring(3, 2);
+                    myManager.BlueAmtContainer.Text = bgColour.Substring(5, 2);
 
                     if (myManager.debugging) ShowDebugInfo();
                 };

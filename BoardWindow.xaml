@@ -11,7 +11,7 @@
             <Grid x:Name="PinGrid" Background="#FFF9F0E0"/>
         </ScrollViewer>
         <Grid x:Name="ReadabiltyGrid" Height="30" VerticalAlignment="Top" Background="#FFEFEFEF">
-            <Grid x:Name="ColourPickContainer" HorizontalAlignment="Center" Width="165" Margin="130,0,0,0">
+            <Grid x:Name="ColourSubContainer" HorizontalAlignment="Center" Width="165" Margin="130,0,0,0">
                 <Label Content="Colour:" HorizontalAlignment="Left" FontSize="10"/>
                 <Button x:Name="ColourPickButton" HorizontalAlignment="Right" Width="120" Height="20" Background="#FFF3F3F3" BorderBrush="#FF707070"/>
             </Grid>
@@ -95,6 +95,44 @@
                     <Image Source="/images/saveGraphic.png" Stretch="Fill"/>
                 </Grid>
             </Button>
+        </Grid>
+        <Grid x:Name="ColourPickerContainer" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="170,30,0,0" Height="55" Width="200" Background="#FFEFEFEF">
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5" Width="55">
+                <Label Content="R:" HorizontalAlignment="Left"/>
+                <TextBox x:Name="RedAmtContainer" HorizontalAlignment="Right" Width="35"/>
+            </Grid>
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Center" Margin="5" Width="55">
+                <Label Content="G:" HorizontalAlignment="Left"/>
+                <TextBox x:Name="GreenAmtContainer" HorizontalAlignment="Right" Width="35"/>
+            </Grid>
+            <Grid VerticalAlignment="Top" HorizontalAlignment="Right" Margin="5" Width="55">
+                <Label Content="B:" HorizontalAlignment="Left"/>
+                <TextBox x:Name="BlueAmtContainer" HorizontalAlignment="Right" Width="35"/>
+            </Grid>
+            <Button x:Name="ColourSaveButton" VerticalAlignment="Bottom" HorizontalAlignment="Right" Width="75" Height="18" Content="Save" Margin="2"/>
+            <!--<Grid x:Name="HuePicker" Margin="5,5">
+                <Image x:Name="HueBackground" Margin="0,0" Height="16" VerticalAlignment="Top" Source="images/test_rainbow.png" Stretch="Fill"/>
+                <Button x:Name="HueSliderKnob" Height="18" Width="5" VerticalAlignment="Top" Margin="-1"/>
+            </Grid>-->
+            <!--<Grid x:Name="TonePicker" Margin="5,26">
+                <Border x:Name="ToneBackground" Height="16" VerticalAlignment="Top" >
+                    <Border.Background>
+                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                            <LinearGradientBrush.RelativeTransform>
+                                <TransformGroup>
+                                    <ScaleTransform CenterY="0.5" CenterX="0.5"/>
+                                    <SkewTransform CenterX="0.5" CenterY="0.5"/>
+                                    <RotateTransform Angle="270" CenterX="0.5" CenterY="0.5"/>
+                                    <TranslateTransform/>
+                                </TransformGroup>
+                            </LinearGradientBrush.RelativeTransform>
+                            <GradientStop Color="Black"/>
+                            <GradientStop Color="White" Offset="1"/>
+                        </LinearGradientBrush>
+                    </Border.Background>
+                </Border>
+                <Button x:Name="ToneSliderKnob" Height="18" Width="5" VerticalAlignment="Top" Margin="-1"/>
+            </Grid>-->
         </Grid>
     </Grid>
 </Window>

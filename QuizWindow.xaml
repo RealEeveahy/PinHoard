@@ -34,7 +34,7 @@
             </Button>
         </Grid>
 
-        <Grid x:Name="GuessFromDefGrid" Visibility="Visible">
+        <Grid x:Name="GuessFromDefMultiChoiceGrid" Visibility="Hidden">
             <Grid VerticalAlignment="Top" Height="200"  Margin="20,20">
             <TextBlock x:Name="DefinitionLabel" Text="Placeholder" Foreground="Blue" FontSize="36" 
                         TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
@@ -62,6 +62,15 @@
                VerticalAlignment="Center" 
                HorizontalAlignment="Center"/>
             </Button>
+        </Grid>
+
+        <Grid x:Name="GuessFromDefTextEntryGrid" Visibility="Visible">
+            <Grid VerticalAlignment="Top" Height="200"  Margin="20,20">
+                <TextBlock x:Name="DefinitionLabel2" Text="Placeholder" Foreground="Blue" FontSize="36" 
+                        TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Label Content="Best describes:" FontSize="36" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="220"/>
+            <TextBox x:Name="GFD_Box" HorizontalAlignment="Center" VerticalAlignment="Center" Width="500" Height="90" FontSize="20" Margin="0,120,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center"/>
         </Grid>
 
         <Grid x:Name="ResultsGrid" Visibility="Hidden">

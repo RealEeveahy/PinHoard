@@ -30,8 +30,9 @@ namespace PinHoard
         public QuizWindow(List<string> filenames, int questions)
         { 
             InitializeComponent();
-            quizFunctions.Add(GuessFromDefinition);
-            quizFunctions.Add(GuessFromTerm);
+            quizFunctions.Add(GuessFromDefinitionMultiChoice);
+            quizFunctions.Add(GuessFromDefinitionTextEntry);
+            quizFunctions.Add(GuessFromTermMultiChoice);
 
             totalQuestions = questions;
             SubmitButton.Click += CheckResponse;
@@ -48,6 +49,8 @@ namespace PinHoard
             GFT_Button1.Click += AnswerSelected;
             GFT_Button2.Click += AnswerSelected;
             GFT_Button3.Click += AnswerSelected;
+
+            GFD_Box.TextChanged += AnswerEntered;
 
             GFD_Button1.Click += AnswerSelected;
             GFD_Button2.Click += AnswerSelected;
@@ -94,7 +97,8 @@ namespace PinHoard
             ClearAllButtonColour();
             //disable all grids
             GuessFromTermGrid.Visibility = Visibility.Hidden;
-            GuessFromDefGrid.Visibility = Visibility.Hidden;
+            GuessFromDefMultiChoiceGrid.Visibility = Visibility.Hidden;
+            GuessFromDefTextEntryGrid.Visibility = Visibility.Hidden;
 
             if (questionProgress <  totalQuestions + 1)
             {
@@ -120,7 +124,7 @@ namespace PinHoard
                 else if (scoreAsPercent == 1) SnarkyLabel.Content = "Perfect Score!";
             }
         }
-        void GuessFromTerm()
+        void GuessFromTermMultiChoice()
         {
             //enable the necessary grid
             GuessFromTermGrid.Visibility = Visibility.Visible;
@@ -144,22 +148,17 @@ namespace PinHoard
             GFT_Answer2.Text = givenResponses[1];
             GFT_Answer3.Text = givenResponses[2];
         }
-        void GuessFromDefinition()
+        void GuessFromDefinitionMultiChoice()
         {
             //enable the necessary grid
-            GuessFromDefGrid.Visibility = Visibility.Visible;
+            GuessFromDefMultiChoiceGrid.Visibility = Visibility.Visible;
             Random r = new Random();
             correctString = titleForContentDict.ElementAt(r.Next(titleForContentDict.Count)).Key;
 
             string chosenDefinition = '"' + titleForContentDict[correctString].Replace(".", string.Empty) + '"';
             DefinitionLabel.Text = chosenDefinition;
 
-            string[] givenResponses = new string[3];
-            for (int i = 0; i < 2; i++)
-            {
-                givenResponses[i] = titleForContentDict.ElementAt(r.Next(titleForContentDict.Count)).Key;
-            }
-            givenResponses[2] = correctString;
+            string[] givenResponses = GenerateGivenResponses(r, correctString);
 
             //shuffle the given responses list
             givenResponses = ShuffleArray(givenResponses);
@@ -167,6 +166,29 @@ namespace PinHoard
             GFD_Answer1.Text = givenResponses[0];
             GFD_Answer2.Text = givenResponses[1];
             GFD_Answer3.Text = givenResponses[2];
+        }
+        void GuessFromDefinitionTextEntry()
+        {
+            //enable the necessary grid
+            GuessFromDefTextEntryGrid.Visibility = Visibility.Visible;
+            Random r = new Random();
+            correctString = titleForContentDict.ElementAt(r.Next(titleForContentDict.Count)).Key;
+
+            string chosenDefinition = '"' + titleForContentDict[correctString].Replace(".", string.Empty) + '"';
+            DefinitionLabel2.Text = chosenDefinition;
+
+            GFD_Box.Text = "";
+        }
+        string[] GenerateGivenResponses(Random r, string correctString)
+        {
+            string[] givenResponses = new string[3];
+            for (int i = 0; i < 2; i++)
+            {
+                givenResponses[i] = titleForContentDict.ElementAt(r.Next(titleForContentDict.Count)).Key;
+            }
+            givenResponses[2] = correctString;
+
+            return givenResponses;
         }
         string[] ShuffleArray(string[] unshuffled)
         {
@@ -195,6 +217,11 @@ namespace PinHoard
             TextBlock buttonChild = buttonChildContentDict[thisButton];
             selectedAnswer = buttonChild.Text;
         }
+        public void AnswerEntered(object sender, RoutedEventArgs e)
+        {
+            TextBox thisTB = (TextBox)sender;
+            selectedAnswer = thisTB.Text;
+        }
         void ClearAllButtonColour()
         {
             SolidColorBrush grey = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDDDDDD"));
@@ -207,7 +234,7 @@ namespace PinHoard
         {
             if(selectedAnswer != null && selectedAnswer != "") 
             {
-                if(selectedAnswer == correctString)
+                if(selectedAnswer.ToLower() == correctString.ToLower())
                 {
                     correctAnswers++;
                 }
