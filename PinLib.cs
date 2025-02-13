@@ -8,12 +8,14 @@ using System.Windows;
 using static PinHoard.BoardWindow;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using System.DirectoryServices.ActiveDirectory;
 
 namespace PinHoard
 {
     //Script for holding repeated classes
     internal class PinLib
     {
+
     }
 
     public class BoardWidget //widget for displaying filenames with checkboxes
@@ -57,6 +59,7 @@ namespace PinHoard
         public string format { get; set; }
         public int lines { get; set; }
         public int GetHeight(); // expect different components to have unique objects that may define the overall height. use this to get them.
+        public int GetOrder(); // order of the component is subject to change and thus should be dynamically accessible.
     }
     public class PinContent : PinComponent //pin component for displaying plain text - default
     {
@@ -66,6 +69,7 @@ namespace PinHoard
         int orderInPin;
         public string format { get; set; } = "content";
         public int lines { get; set; } = 1;
+        public TextChangeManager textChangeManager;
         public PinContent(int order, BasePin parent, int width, string content = "This is a note!") 
         {
             parentPin = parent;
@@ -81,8 +85,9 @@ namespace PinHoard
                 BorderThickness = new Thickness(0, 0, 0, 0)
             };
 
-            tb.TextChanged += TextChangeHandler;
-            TextChangeHandler(this, null);
+            textChangeManager = new TextChangeManager(this, tb, parentPin);
+            tb.TextChanged += textChangeManager.HandleTextChange;
+            textChangeManager.HandleTextChange(this, null);
 
             wrapper.Children.Add(tb);
             tb.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
@@ -91,40 +96,9 @@ namespace PinHoard
         {
             return (int)tb.ActualHeight;
         }
-        private void TextChangeHandler(object sender, TextChangedEventArgs e)
+        public int GetOrder()
         {
-            tb.TextChanged -= TextChangeHandler;
-
-            parentPin.rawStringList[orderInPin] = (tb.Text.Replace("\n", string.Empty),format);
-            StringBuilder newText = new StringBuilder();
-            int charCount = 0;
-            int lastWordIndex = 0;
-            int newLineCount = 1;
-
-            foreach (char c in parentPin.rawStringList[orderInPin].Item1)
-            {
-                newText.Append(c);
-                if (c != '.' || c != ',') charCount++;
-                if (c == ' ') lastWordIndex = newText.Length;
-
-                if (charCount % 16 == 0)
-                {
-                    newText.Insert(lastWordIndex, "\n");
-                    newLineCount++;
-                }
-            }
-            int caretPos = tb.CaretIndex;
-            if (lines != newLineCount) //if the no. of lines before changing text is different after, recalculate the pin height
-            {
-                lines = newLineCount;
-                parentPin.PinResize();
-            }
-
-            tb.Text = newText.ToString();
-
-            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), tb.Text.Length);
-
-            tb.TextChanged += TextChangeHandler;
+            return orderInPin;
         }
     }
     public class TitleBox : PinComponent //pin component that adds a title
@@ -135,6 +109,7 @@ namespace PinHoard
         int orderInPin;
         public string format { get; set; } = "title";
         public int lines { get; set; } = 1;
+        TextChangeManager textChangeManager;
         public TitleBox(int order, BasePin parent, int width, string content = "This is a title.")
         {
             parentPin = parent;
@@ -153,8 +128,9 @@ namespace PinHoard
                 FontSize = 14
             };
 
-            tb.TextChanged += TextChangeHandler;
-            TextChangeHandler(this, null);
+            textChangeManager = new TextChangeManager(this, tb, parentPin);
+            tb.TextChanged += textChangeManager.HandleTextChange;
+            textChangeManager.HandleTextChange(this, null);
 
 
             wrapper.Children.Add(tb);
@@ -164,40 +140,9 @@ namespace PinHoard
         {
             return (int)tb.ActualHeight;
         }
-        private void TextChangeHandler(object sender, TextChangedEventArgs e)
+        public int GetOrder()
         {
-            tb.TextChanged -= TextChangeHandler;
-
-            parentPin.rawStringList[orderInPin] = (tb.Text.Replace("\n", string.Empty), format);
-            StringBuilder newText = new StringBuilder();
-            int charCount = 0;
-            int lastWordIndex = 0;
-            int newLineCount = 1;
-
-            foreach (char c in parentPin.rawStringList[orderInPin].Item1)
-            {
-                newText.Append(c);
-                if (c != '.' || c != ',') charCount++;
-                if (c == ' ') lastWordIndex = newText.Length;
-
-                if (charCount % 16 == 0)
-                {
-                    newText.Insert(lastWordIndex, "\n");
-                    newLineCount++;
-                }
-            }
-            int caretPos = tb.CaretIndex;
-            if (lines != newLineCount) //if the no. of lines before changing text is different after, recalculate the pin height
-            {
-                lines = newLineCount;
-                parentPin.PinResize();
-            }
-
-            tb.Text = newText.ToString();
-
-            tb.CaretIndex = Math.Min(caretPos + (tb.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), tb.Text.Length);
-
-            tb.TextChanged += TextChangeHandler;
+            return orderInPin;
         }
     }
     public class ListBox : PinComponent
@@ -217,6 +162,10 @@ namespace PinHoard
         public int GetHeight()
         {
             return 0;
+        }
+        public int GetOrder()
+        {
+            return 0; //should not need to access for this component
         }
         List<PointBox> StringsToPoints(List<string> strings, int startOrder) //method for quickly turning a list into several points
         {
@@ -244,6 +193,7 @@ namespace PinHoard
         public string format { get; set; } = "list";
         public int lines { get; set; } = 1;
         int orderInPin = 0;
+        TextChangeManager textChangeManager;
         public PointBox(string content, int order, BasePin parent, int width, ListBox container)
         {
             orderInPin = order;
@@ -275,51 +225,67 @@ namespace PinHoard
             thisPoint.Children.Add(thisContent);
             wrapper.Children.Add(thisPoint);
 
-            TextChangeHandler(this, null);
+            textChangeManager = new TextChangeManager(this, thisContent, parentPin);
+            thisContent.TextChanged += textChangeManager.HandleTextChange;
+            textChangeManager.HandleTextChange(this, null);
 
-            thisContent.TextChanged += TextChangeHandler;
             thisContent.GotFocus += (sender, e) => { parentPin.myManager.focusedPin = parentPin; };
         }
         public int GetHeight()
         {
             return (int)thisContent.ActualHeight;
         }
-        private void TextChangeHandler(object sender, TextChangedEventArgs e)
+        public int GetOrder()
         {
-            if (thisContent != null)
+            return orderInPin;
+        }
+    }
+    public class TextChangeManager
+    {
+        PinComponent component;
+        TextBox target;
+        BasePin parent;
+        public TextChangeManager(PinComponent parentComponent, TextBox target, BasePin parent)
+        {
+            this.component = parentComponent;
+            this.target = target;
+            this.parent = parent;
+        }
+        public void HandleTextChange(object sender, TextChangedEventArgs e)
+        {
+            target.TextChanged -= this.HandleTextChange;
+            int orderInPin = component.GetOrder();
+
+            parent.rawStringList[orderInPin] = (target.Text.Replace("\n", string.Empty), component.format);
+            StringBuilder newText = new StringBuilder();
+            int charCount = 0;
+            int lastWordIndex = 0;
+            int newLineCount = 1;
+
+            foreach (char c in parent.rawStringList[orderInPin].Item1)
             {
-                thisContent.TextChanged -= TextChangeHandler;
+                newText.Append(c);
+                if (c != '.' || c != ',') charCount++;
+                if (c == ' ') lastWordIndex = newText.Length;
 
-                parentPin.rawStringList[orderInPin] = (thisContent.Text.Replace("\n", string.Empty), format);
-                StringBuilder newText = new StringBuilder();
-                int charCount = 0;
-                int lastWordIndex = 0;
-                int newLineCount = 1;
-
-                foreach (char c in parentPin.rawStringList[orderInPin].Item1)
+                if (charCount % 16 == 0)
                 {
-                    newText.Append(c);
-                    if (c != '.' || c != ',')  charCount++;
-                    if (c == ' ') lastWordIndex = newText.Length;
-
-                    if (charCount % 14 == 0)
-                    {
-                        newText.Insert(lastWordIndex, "\n");
-                    }
+                    newText.Insert(lastWordIndex, "\n");
+                    newLineCount++;
                 }
-                int caretPos = thisContent.CaretIndex;
-                if (lines != newLineCount) //if the no. of lines before changing text is different after, recalculate the pin height
-                {
-                    lines = newLineCount;
-                    parentPin.PinResize();
-                }
-
-                thisContent.Text = newText.ToString();
-
-                thisContent.CaretIndex = Math.Min(caretPos + (thisContent.Text.Length - parentPin.rawStringList[orderInPin].Item1.Length), thisContent.Text.Length);
-
-                thisContent.TextChanged += TextChangeHandler;
             }
+            int caretPos = target.CaretIndex;
+            if (component.lines != newLineCount) //if the no. of lines before changing text is different after, recalculate the pin height
+            {
+                component.lines = newLineCount;
+                parent.PinResize();
+            }
+
+            target.Text = newText.ToString();
+
+            target.CaretIndex = Math.Min(caretPos + (target.Text.Length - parent.rawStringList[orderInPin].Item1.Length), target.Text.Length);
+
+            target.TextChanged += this.HandleTextChange;
         }
     }
 }
