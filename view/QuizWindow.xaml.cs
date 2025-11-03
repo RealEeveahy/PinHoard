@@ -14,6 +14,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using static PinHoard.BoardWindow;
 using System.Text.Json;
+using PinHoard.model.save_load;
 
 namespace PinHoard
 {
@@ -27,14 +28,13 @@ namespace PinHoard
         public Dictionary<string,string> titleForContentDict = new Dictionary<string,string>();
         public Dictionary<Button, TextBlock> buttonChildContentDict = new Dictionary<Button, TextBlock>();
         private List<Action> quizFunctions = new List<Action>();
-        public QuizWindow(List<string> filenames, int questions)
+        public QuizWindow()
         { 
             InitializeComponent();
             quizFunctions.Add(GuessFromDefinitionMultiChoice);
             quizFunctions.Add(GuessFromDefinitionTextEntry);
             quizFunctions.Add(GuessFromTermMultiChoice);
 
-            totalQuestions = questions;
             SubmitButton.Click += CheckResponse;
 
             //populate the dictionary so the text content of buttons can be grabbed
@@ -56,38 +56,7 @@ namespace PinHoard
             GFD_Button2.Click += AnswerSelected;
             GFD_Button3.Click += AnswerSelected;
 
-            LoadContents(filenames);
-
             NextQuestion();
-        }
-        void LoadContents(List<string> filenames)
-        {
-            //get the current path
-            string currentPath = AppDomain.CurrentDomain.BaseDirectory;
-            string directoryPath = System.IO.Path.Combine(currentPath, "boards");
-
-            //process definitions
-            foreach (string filename in filenames)
-            {
-                string filePath = System.IO.Path.Combine(directoryPath, filename);
-                string json = File.ReadAllText(filePath);
-                SaveData? data = JsonSerializer.Deserialize<SaveData>(json);
-
-                if (data != null)
-                {
-                    List<PinDataObject>? contents = data.myPinObjects;
-                    if (contents != null)
-                    {
-                        foreach (PinDataObject obj in contents)
-                        {
-                            if (obj.stringList?.Count == 2)
-                            {
-                                titleForContentDict[obj.stringList[0]] = obj.stringList[1];
-                            }
-                        }
-                    }
-                }
-            }
         }
         void NextQuestion()
         {
@@ -142,7 +111,6 @@ namespace PinHoard
             givenResponses[2] = correctString;
 
             //shuffle the given responses list
-            givenResponses = ShuffleArray(givenResponses); 
 
             GFT_Answer1.Text = givenResponses[0];
             GFT_Answer2.Text = givenResponses[1];
@@ -161,7 +129,6 @@ namespace PinHoard
             string[] givenResponses = GenerateGivenResponses(r, correctString);
 
             //shuffle the given responses list
-            givenResponses = ShuffleArray(givenResponses);
 
             GFD_Answer1.Text = givenResponses[0];
             GFD_Answer2.Text = givenResponses[1];
@@ -189,23 +156,6 @@ namespace PinHoard
             givenResponses[2] = correctString;
 
             return givenResponses;
-        }
-        string[] ShuffleArray(string[] unshuffled)
-        {
-            string[] shuffled = new string[unshuffled.Length];
-            List<int> positions = new List<int>{ 0, 1, 2 };
-            Random r = new Random();
-
-            int i = 0;
-            while(positions.Count > 0)
-            {
-                int rngIndex = r.Next(positions.Count);
-                shuffled[positions[rngIndex]]= unshuffled[i];
-                positions.RemoveAt(rngIndex);
-                i++;
-            }
-
-            return shuffled;
         }
         public void AnswerSelected(object sender, RoutedEventArgs e)
         {

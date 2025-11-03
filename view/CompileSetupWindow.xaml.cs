@@ -12,6 +12,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PinHoard.model;
 
 namespace PinHoard
 {
@@ -33,7 +34,7 @@ namespace PinHoard
                 {
                     BoardWidget newWidget = new BoardWidget(filename);
 
-                    SelectBoardPanel.Children.Add(newWidget.WidgetGrid);
+                    SelectBoardPanel.Children.Add(newWidget);
                     widgets.Add(newWidget);
 
                     i++;
@@ -50,21 +51,13 @@ namespace PinHoard
             {
                 if (widget.selected)
                 {
-                    filenames.Add(widget.myFilename);
+                    filenames.Add(widget.filename);
                 }
             }
             if(filenames.Count > 0) 
             {
                 //create a new window for the quiz
-                BoardWindow compiledBoardWindow = new BoardWindow(true);
-                compiledBoardWindow.Show();
-                compiledBoardWindow.readOnly = true;
-
-                foreach (string f in filenames)
-                    compiledBoardWindow.LoadAllPins(f.Substring(0, f.Length - 5));
-                compiledBoardWindow.RecalculateAllPositions();
-
-                compiledBoardWindow.Title = filenames.Count.ToString() + " Boards";
+                Board compiledBoard = new Board(filenames);
                 this.Hide();
             }
             else if(filenames.Count == 0)

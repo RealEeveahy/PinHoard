@@ -7,6 +7,10 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <Optimize>False</Optimize>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Remove="boards\**" />
     <EmbeddedResource Remove="boards\**" />
@@ -59,21 +63,26 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="CompileSetupWindow.xaml.cs">
+    <Compile Update="view\CompileSetupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="QuizWindow.xaml.cs">
+    <Compile Update="view\QuizWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="QuizSetupWindow.xaml.cs">
+    <Compile Update="view\QuizSetupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="QuizSetupWindow.xaml">
+    <Page Update="view\QuizSetupWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Refractored.MvvmHelpers" Version="1.6.2" />
   </ItemGroup>
 
 </Project>

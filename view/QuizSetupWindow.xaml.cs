@@ -12,11 +12,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
+using PinHoard.model;
+using PinHoard.model.quiz;
 
 namespace PinHoard
 {
     public partial class QuizSetupWindow : Window
     {
+
         public List<BoardWidget> widgets = new List<BoardWidget>();
         public QuizSetupWindow(List<string> filenames)
         {
@@ -33,7 +36,7 @@ namespace PinHoard
                 {
                     BoardWidget newWidget = new BoardWidget(filename);
 
-                    SelectBoardPanel.Children.Add(newWidget.WidgetGrid);
+                    SelectBoardPanel.Children.Add(newWidget);
                     widgets.Add(newWidget);
 
                     i++;
@@ -50,14 +53,13 @@ namespace PinHoard
             {
                 if (widget.selected)
                 {
-                    filenames.Add(widget.myFilename);
+                    filenames.Add(widget.filename);
                 }
             }
             if(filenames.Count > 0 && int.TryParse(QuestionCountBox.Text, out int qc) && qc >= 1) 
             {
                 //create a new window for the quiz
-                QuizWindow quizWindow = new QuizWindow(filenames, qc);
-                quizWindow.Show();
+                QuizModel quiz = new QuizModel(filenames, qc);
                 this.Hide();
             }
             else if(filenames.Count == 0)
