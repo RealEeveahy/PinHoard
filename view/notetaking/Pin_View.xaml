@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="PinHoard.view.notetaking.Pin_View"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PinHoard.view.notetaking"
+             mc:Ignorable="d" >
+    <WrapPanel x:Name="NoteGrid" 
+          Background="{Binding BackgroundColour}"
+          Visibility="{Binding NoteVisibility, Mode=OneWay}"
+          MinHeight="120"
+          Width="120"
+          Margin="2.5,5,2.5,0"
+          HorizontalAlignment="Left" VerticalAlignment="Top"
+          MouseLeftButtonDown="Clicked">
+        <Border x:Name="PinBorder" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="120" 
+                IsHitTestVisible="True" MouseLeftButtonDown="Clicked">
+            <Grid HorizontalAlignment="Stretch" MouseLeftButtonDown="Clicked">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+                
+                <Image x:Name="PinImage" Source="/images/pushpingraphic.png" Stretch="Uniform" Height="10" Width="10" 
+                    HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0,2,0,4"/>
+                
+                <StackPanel x:Name="MainStack" Grid.Row="1" VerticalAlignment="Center" Margin="4,4">
+                
+                </StackPanel>
+            </Grid>
+        </Border>
+    </WrapPanel>
+</UserControl>

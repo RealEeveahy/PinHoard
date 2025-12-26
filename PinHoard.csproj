@@ -59,20 +59,21 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="CompileSetupWindow.xaml.cs">
+    <Compile Update="view\menus\CompileSetupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Update="QuizWindow.xaml.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Update="QuizSetupWindow.xaml.cs">
+    <Compile Update="view\menus\QuizSetupWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
 
   <ItemGroup>
-    <Page Update="QuizSetupWindow.xaml">
+	  
+    <Page Update="view\menus\QuizSetupWindow.xaml">
       <SubType>Designer</SubType>
+    </Page>
+    <Page Update="view\style\ImageButton.xaml">
+      <CustomToolNamespace>PinHoard.view.style</CustomToolNamespace>
     </Page>
   </ItemGroup>
 

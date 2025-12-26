@@ -1,0 +1,48 @@
+﻿<Window x:Class="PinHoard.view.quiz.QuizShell"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:PinHoard.view.quiz"
+        xmlns:vm="clr-namespace:PinHoard.viewmodel.question_vms"
+        xmlns:v="clr-namespace:PinHoard.view.quiz.questions"
+        mc:Ignorable="d"
+        Title="Quiz" Height="600" Width="900">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="80"/>
+        </Grid.RowDefinitions>
+
+        <ContentControl Grid.Row="0" Content="{Binding CurrentQuestionViewModel}" HorizontalAlignment="Center">
+            <ContentControl.Resources>
+                
+                <DataTemplate DataType="{x:Type vm:FreeTextQ_ViewModel}">
+                    <v:FreeTextQuestion />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:MultiChoiceQ_ViewModel}">
+                    <v:MultiChoiceQuestion />
+                </DataTemplate>
+
+                <DataTemplate DataType="{x:Type vm:ResultScreen_ViewModel}">
+                    <v:ResultScreen />
+                </DataTemplate>
+                
+            </ContentControl.Resources>
+        </ContentControl>
+
+        <Grid Grid.Row="1" VerticalAlignment="Bottom">
+            <Label x:Name="ProgressLabel" Content="{Binding QuestionProgress}" FontSize="24" HorizontalAlignment="Left" Margin="20"/>
+
+            <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="20">
+                <Button x:Name="SubmitButton" Content="{Binding SubmitButtonContent}" FontSize="24" 
+                    Width="150" Height="40"
+                    Foreground="White" Background="CornflowerBlue"/>
+                <Button x:Name="RetryButton" Content="Retry" FontSize="24" 
+                    Width="150" Height="40" Margin="10,0,0,0" Visibility="{Binding RetryVisibility}"
+                    Foreground="White" Background="CornflowerBlue"/>
+            </StackPanel>
+        </Grid>
+    </Grid>
+</Window>
