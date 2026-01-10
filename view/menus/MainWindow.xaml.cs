@@ -7,7 +7,8 @@ using System.Windows;
 namespace PinHoard
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Represents the main application window containing the most recently accessed boards, 
+    /// as well as options to start quizzes and compilations
     /// </summary>
     public partial class MainWindow : Window
     {

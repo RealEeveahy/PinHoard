@@ -7,6 +7,9 @@ using System.Windows.Shapes;
 
 namespace PinHoard.model.pins
 {
+    /// <summary>
+    /// Represents a type of component that displays a bullet point item as part of a list.
+    /// </summary>
     public class ListPoint : ComponentBase
     {
         public ListPoint(int order, int width, /*ComponentContainer container,*/ string content = "This is a dot point.")

@@ -9,7 +9,7 @@ namespace PinHoard.util
 {
     public class PinMatrix : WrapPanel
     {
-        public List<MatrixRow> rows = new List<MatrixRow>();
+        //public List<MatrixRow> rows = new List<MatrixRow>();
         public PinMatrix()
         {
             //this.Orientation = Orientation.Horizontal;

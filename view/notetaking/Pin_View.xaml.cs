@@ -5,12 +5,11 @@ using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using System.Windows.Media;
 
 namespace PinHoard.view.notetaking
 {
     /// <summary>
-    /// Interaction logic for Pin_View.xaml
+    /// Visual representation of a Pin_Model
     /// </summary>
     public partial class Pin_View : UserControl
     {

@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace PinHoard
 {
+    /// <summary>
+    /// Represents a temporary window that provides the ability to select multiple boards for revision
+    /// </summary>
     public partial class QuizSetupWindow : Window
     {
         int questionCount = 10;

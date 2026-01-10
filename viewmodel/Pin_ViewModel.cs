@@ -10,6 +10,9 @@ using System.Windows.Media;
 
 namespace PinHoard.viewmodel
 {
+    /// <summary>
+    /// Represents the viewmodel for a Pin, managing its interactions with the view
+    /// </summary>
     public class Pin_ViewModel : INotifyPropertyChanged
     {
         public Pin_Model model;
@@ -50,7 +53,6 @@ namespace PinHoard.viewmodel
             }
         }
         public Visibility NoteVisibility { get; set; }
-        public int orderInBoard; //irrelevant when filtering, find a new way to assign positions
         private readonly Action<Pin_ViewModel> FocusSelf;
         private bool ActiveList;
 
@@ -59,7 +61,7 @@ namespace PinHoard.viewmodel
             this.model = model;
             NoteVisibility = Visibility.Visible;
 
-            foreach(ComponentBase component in model.componentList) component.Focused += Focus;
+            foreach (ComponentBase component in model.componentList) component.Focused += Focus;
 
             view = new Pin_View(this);
             container.Add(view);
@@ -75,10 +77,6 @@ namespace PinHoard.viewmodel
         {
             FocusSelf(this);
         }
-        public void Update(ComponentBase component)
-        {
-
-        }
         public void SetVisible(bool isVisible)
         {
             NoteVisibility = isVisible ? Visibility.Visible : Visibility.Collapsed;
@@ -92,7 +90,6 @@ namespace PinHoard.viewmodel
                 componentsAsString += $"\u0009'{sPair.Item1}', ({sPair.Item2}) \n";
             }
             MessageBox.Show("Information about this Pin: \n" +
-                $"Order  {orderInBoard}\n" +
                 $"Logical Dimensions    {width} x {height}\n" +
                 //$"Physical Dimensions   {NoteGrid.ActualWidth} x {NoteGrid.ActualHeight}\n" +
                 $"Colour    {model.bgColour}\n" +

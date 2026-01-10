@@ -6,6 +6,9 @@ using System.Windows.Controls;
 
 namespace PinHoard.model.pins
 {
+    /// <summary>
+    /// Defines the contract for the base class of pin components.
+    /// </summary>
     public interface IComponent
     {
         StackPanel wrapper { get; }
@@ -15,6 +18,9 @@ namespace PinHoard.model.pins
         double GetHeight(); // expect different components to have unique objects that may define the overall height. use this to get them.
         int GetOrder(); // order of the component is subject to change and thus should be dynamically accessible.
     }
+    /// <summary>
+    /// Represents the abstract base class for pin components.
+    /// </summary>
     public abstract class ComponentBase : IComponent
     {
         public StackPanel wrapper { get; set; } = new StackPanel();
@@ -44,6 +50,9 @@ namespace PinHoard.model.pins
             foreach (UIElement child in children) wrapper.Children.Add(child);
         }
     }
+    /// <summary>
+    /// Currently unused, represents a container for multiple components that should be treated as a group
+    /// </summary>
     public class ComponentContainer
     {
         public StackPanel wrapper { get; set; } = new StackPanel();

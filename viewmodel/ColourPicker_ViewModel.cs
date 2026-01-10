@@ -1,13 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
-using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace PinHoard.viewmodel
 {
+    /// <summary>
+    /// Represents the ViewModel for the Colour Picker of the Board Window, 
+    /// allowing sliders to adjust the background colour value of a pin in focus
+    /// </summary>
     public class ColourPicker_ViewModel : INotifyPropertyChanged
     {
         private readonly Board_ViewModel _board;
@@ -18,7 +18,7 @@ namespace PinHoard.viewmodel
         }
         private void BoardUpdate(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == nameof(Board_ViewModel.FocusedColour) || e.PropertyName=="focusedPin")
+            if (e.PropertyName == nameof(Board_ViewModel.FocusedColour) || e.PropertyName == "focusedPin")
             {
                 OnPropertyChanged(nameof(R_Slider));
                 OnPropertyChanged(nameof(G_Slider));

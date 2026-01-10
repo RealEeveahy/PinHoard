@@ -4,7 +4,7 @@ using System.Windows;
 namespace PinHoard
 {
     /// <summary>
-    /// Interaction logic for SettingsWindow.xaml
+    /// Represents the settings window for a given file
     /// </summary>
     public partial class SettingsWindow : Window
     {

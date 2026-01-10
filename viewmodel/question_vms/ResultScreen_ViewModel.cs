@@ -20,8 +20,8 @@ namespace PinHoard.viewmodel.question_vms
             set { _answer = value; }
         }
         public ObservableCollection<ResultWidget> Results { get; set; } = new ObservableCollection<ResultWidget>();
-        private int _score = 0;
-        public string ScoreText => $"You scored: {_score}/{Results.Count} ({ MathF.Round(((float)_score/Results.Count)*100, 2) }%)";
+        private readonly int _score = 0;
+        public string ScoreText => $"You scored: {_score}/{Results.Count} ({MathF.Round(((float)_score / Results.Count) * 100, 2)}%)";
         public string CommentText => _comment;
         public string _comment
         {
@@ -43,7 +43,7 @@ namespace PinHoard.viewmodel.question_vms
             }
         }
 
-        private string[] comments = new string[]
+        private readonly string[] comments = new string[]
         {
             "Total failure!",
             "Might wanna study harder!",
@@ -56,7 +56,7 @@ namespace PinHoard.viewmodel.question_vms
         {
             foreach (var kvp in answerDict)
             {
-                if(PinHoardHelpers.ValidateQuizResponse(kvp.Key.answer, kvp.Value))
+                if (PinHoardHelpers.ValidateQuizResponse(kvp.Key.answer, kvp.Value))
                     _score++;
 
                 Results.Add(new ResultWidget(new viewmodel.question_vms.Result_ViewModel(kvp.Key, kvp.Value)));

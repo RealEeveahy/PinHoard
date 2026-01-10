@@ -11,14 +11,22 @@ using System.Windows;
 
 namespace PinHoard.viewmodel
 {
+    /// <summary>
+    /// Represents the viewmodel for a Quiz session, managing the question queue and user progress
+    /// </summary>
     public class Quiz_ViewModel : INotifyPropertyChanged
     {
         readonly Quiz_Model model;
-        List<Pin_Model> validPins = new List<Pin_Model>();
+        readonly List<Pin_Model> validPins = new List<Pin_Model>();
 
         public List<IQuizQuestion> questionQueue = new List<IQuizQuestion>();
 
         public IQuizQuestion CurrentQuestion;
+
+        /// <summary>
+        /// A viewmodel is created each time the current question changes,
+        /// this changes the view displayed in the quiz shell
+        /// </summary>
         private qvm_base? _currentQuestionViewModel;
         public qvm_base? CurrentQuestionViewModel
         {
@@ -31,6 +39,7 @@ namespace PinHoard.viewmodel
             }
         }
 
+        // Store each response given by the user
         public Dictionary<IQuizQuestion, string> answerDictionary = new Dictionary<IQuizQuestion, string>();
         int _progress = 0;
         public int progress

@@ -8,6 +8,11 @@ using System.Windows;
 
 namespace PinHoard.model.save_load
 {
+    /// <summary>
+    /// Extracts Pin_Model instances from a file and compiles them into a given Board instance.
+    /// 
+    /// <para>If file version is not appropriate, the task is given to LegacyLoad instead.</para>
+    /// </summary>
     internal class LoadData
     {
         public LoadData(string boardname, Board loadTo, bool verbose = true)

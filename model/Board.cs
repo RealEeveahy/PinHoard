@@ -5,6 +5,9 @@ using System.Collections.Generic;
 
 namespace PinHoard.model
 {
+    /// <summary>
+    /// Represents a named container for pins
+    /// </summary>
     public class Board
     {
         public string boardName = string.Empty; //when a new board is created it has no name. this will be updated on load

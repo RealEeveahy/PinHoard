@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace PinHoard.model.save_load
 {
+    /// <summary>
+    /// Represents a pin model in serializable form, as only a background colour and list of serialized component models
+    /// </summary>
     [Serializable]
     public class SerializablePin
     {
@@ -22,7 +25,7 @@ namespace PinHoard.model.save_load
         /// <summary>
         /// Self-Serializing Constructor to be used by the SerializableBoard class
         /// </summary>
-        /// <param name="pin"></param>
+        /// <param name="pin">The pin in its orignal form.</param>
         public SerializablePin(Pin_Model pin)
         {
             components = new List<SerializableComponent>();

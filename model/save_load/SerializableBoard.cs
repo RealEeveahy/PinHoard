@@ -4,6 +4,9 @@ using System.Collections.Generic;
 
 namespace PinHoard.model.save_load
 {
+    /// <summary>
+    /// Represents a board model in serializable form, as only a file version and list of serialized pin models.
+    /// </summary>
     [Serializable]
     public class SerializableBoard
     {
@@ -19,12 +22,10 @@ namespace PinHoard.model.save_load
             this.pins = pinList;
         }
         /// <summary>
-        /// 
         /// Self-Initializing constructor.
-        /// 
         /// </summary>
-        /// <param name="version"></param>
-        /// <param name="board"></param>
+        /// <param name="version">The currently supported file version.</param>
+        /// <param name="board">The board model to be serialized.</param>
         public SerializableBoard(float version, Board board)
         {
             this.version = version;

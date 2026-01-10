@@ -4,12 +4,14 @@ using System.Linq;
 
 namespace PinHoard.model.pins
 {
+    /// <summary>
+    /// Represents an individual 'pin', which is a comprised of multiple components and a background colour.
+    /// </summary>
     public class Pin_Model
     {
         public ObservableCollection<ComponentBase> componentList { get; } = new ObservableCollection<ComponentBase>();
         public string bgColour = string.Empty;
         public int componentCount => componentList.Count;
-
         // Default constructor to generate an empty pin
         public Pin_Model()
         {
@@ -33,8 +35,6 @@ namespace PinHoard.model.pins
         public void AddComponent(ComponentBase newComponent)
         {
             componentList.Add(newComponent);
-
-            // add new component to the raw list
         }
         public bool ContainsFilterTerm(string term)
         {

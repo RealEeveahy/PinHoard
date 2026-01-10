@@ -7,7 +7,7 @@ using System.Windows.Controls.Primitives;
 namespace PinHoard
 {
     /// <summary>
-    /// Interaction logic for BoardWindow.xaml
+    /// Represents a window for displaying and making changes to the pins contained in a board
     /// </summary>
     public partial class BoardWindow : Window
     {
@@ -34,10 +34,6 @@ namespace PinHoard
                 NewEmptyButton.MouseEnter += PopoutToolbar;
                 NewContentButton.MouseEnter += PopoutToolbar;
             }
-        }
-        public void Build()
-        {
-
         }
         private void ToggleDebug(object sender, RoutedEventArgs e) { viewModel.DebugFocused(); }
         private void SaveBoard(object sender, RoutedEventArgs e) { viewModel.Save(); }

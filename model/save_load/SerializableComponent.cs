@@ -3,6 +3,9 @@ using System;
 
 namespace PinHoard.model.save_load
 {
+    /// <summary>
+    /// Represents a component model in serializable form, as only its content and format.
+    /// </summary>
     [Serializable]
     public class SerializableComponent
     {

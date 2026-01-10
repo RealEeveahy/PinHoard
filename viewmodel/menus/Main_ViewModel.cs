@@ -13,6 +13,9 @@ using System.Windows;
 
 namespace PinHoard.viewmodel.menus
 {
+    /// <summary>
+    /// Represents the view model for the menu screen of the application.
+    /// </summary>
     public class Main_ViewModel : INotifyPropertyChanged
     {
         public ObservableCollection<string> boardnames = new ObservableCollection<string>();

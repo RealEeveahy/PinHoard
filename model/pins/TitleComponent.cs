@@ -6,6 +6,9 @@ using System.Windows.Media;
 
 namespace PinHoard.model.pins
 {
+    /// <summary>
+    /// Represents a component that displays a title (large, centered text).
+    /// </summary>
     internal class TitleComponent : ComponentBase
     {
         public TitleComponent(int order, int width = 120, string content = "This is a title.")

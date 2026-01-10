@@ -1,5 +1,9 @@
 ﻿namespace PinHoard.model.quiz
 {
+    /// <summary>
+    /// The model for a multiple choice quiz question.
+    /// This question type provides the user with 3 options, one of which is correct.
+    /// </summary>
     class MultiChoiceQ_Model : IQuizQuestion
     {
         public string topic { get; set; }

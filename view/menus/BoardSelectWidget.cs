@@ -6,6 +6,9 @@ using System.Windows.Controls;
 
 namespace PinHoard.view.menus
 {
+    /// <summary>
+    /// Represents a widget that displays the name of a board along with a checkbox.
+    /// </summary>
     public class BoardSelectWidget : CompositeWidget
     {
         public CheckBox BoardCheck = new CheckBox();

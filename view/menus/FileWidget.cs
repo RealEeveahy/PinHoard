@@ -9,6 +9,10 @@ using System.Windows.Media.Imaging;
 
 namespace PinHoard.view.menus
 {
+    /// <summary>
+    /// A widget to represent an individual file in the file menu.
+    /// Displays the file name and provides function to open or modify the file.
+    /// </summary>
     public class FileWidget : CompositeWidget
     {
         public string fName { get; set; }

@@ -7,6 +7,9 @@ using System.Windows;
 
 namespace PinHoard.util
 {
+    /// <summary>
+    /// Responsible for writing files and ensuring paths exist
+    /// </summary>
     public static class BoardSaveUtility
     {
         public static readonly float saveLoadVersion = 1.3f; //increment by .1 any time the saving / loading system is updated

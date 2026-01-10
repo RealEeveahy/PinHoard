@@ -7,6 +7,12 @@ namespace PinHoard.util
 {
     public static class QuizBuilder
     {
+        /// <summary>
+        /// Generates a queue of quiz questions from a given list of pre-validated pins
+        /// </summary>
+        /// <param name="count">The target number of questions the quiz should contain</param>
+        /// <param name="viableSources">A list of Pin models to draw info from</param>
+        /// <returns></returns>
         public static List<IQuizQuestion> GenerateQueue(int count, List<Pin_Model> viableSources)
         {
             List<IQuizQuestion> questions = new List<IQuizQuestion>();
@@ -41,6 +47,14 @@ namespace PinHoard.util
 
             return questions;
         }
+
+        /// <summary>
+        /// Generates a quiz question from all possible types
+        /// </summary>
+        /// <param name="pin1">The pin that the question is focused on</param>
+        /// <param name="pin2">Extra pin for questions with incorrect choices</param>
+        /// <param name="pin3">Extra pin for questions with incorrect choices</param>
+        /// <returns>A question instance inheriting from IQuizQuestion</returns>
         static IQuizQuestion GenerateQuestion(Pin_Model pin1, Pin_Model pin2, Pin_Model pin3)
         {
             IQuizQuestion question;

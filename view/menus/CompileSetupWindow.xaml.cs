@@ -3,6 +3,9 @@ using System.Windows;
 
 namespace PinHoard
 {
+    /// <summary>
+    /// Represents a temporary window that provides the ability to select multiple boards for compilation
+    /// </summary>
     public partial class CompileSetupWindow : Window
     {
         readonly Main_ViewModel viewModel;

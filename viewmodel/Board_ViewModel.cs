@@ -5,7 +5,6 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -37,13 +36,11 @@ namespace PinHoard.viewmodel
             new SolidColorBrush(Colors.LightGray);
 
         public ColourPicker_ViewModel ColourPicker { get; }
-        public bool ColourPickIsOpen = false; 
+        public bool ColourPickIsOpen = false;
 
         public bool readOnly = false, debugging = false;
-        
-        public Action ReloadMain;
 
-        readonly bool filtered; //temporary
+        public Action ReloadMain;
 
         public double[] windowDimensions = new double[2] { 800, 700 };
         //private Size defaultPinSize = new Size(120, 120);
@@ -150,9 +147,9 @@ namespace PinHoard.viewmodel
             debugging ^= true;
             return debugging ? Cursors.Help : Cursors.Arrow;
         }
-        public void DebugFocused() 
-        { 
-            if(focusedPin != null)
+        public void DebugFocused()
+        {
+            if (focusedPin != null)
                 focusedPin.ShowDebugInfo();
             else
                 PinHoardErrors.FocusError("Failed to initiate debug");

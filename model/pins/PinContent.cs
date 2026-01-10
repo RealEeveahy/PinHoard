@@ -6,6 +6,9 @@ using System.Windows.Media;
 
 namespace PinHoard.model.pins
 {
+    /// <summary>
+    /// Represents a type of component that displays a simple block of text.
+    /// </summary>
     internal class PinContent : ComponentBase
     {
         public PinContent(int order, int width = 120, string content = "This is a note!")

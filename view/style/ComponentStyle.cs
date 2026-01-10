@@ -1,5 +1,8 @@
 ﻿namespace PinHoard.style
 {
+    /// <summary>
+    /// Represents the style settings for a UI component including the font size and colours
+    /// </summary>
     public class ComponentStyle
     {
         public string styleName;

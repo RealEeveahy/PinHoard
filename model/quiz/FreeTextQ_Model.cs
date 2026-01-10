@@ -1,5 +1,9 @@
 ﻿namespace PinHoard.model.quiz
 {
+    /// <summary>
+    /// The model for a free text quiz question.
+    /// This question type requires the user to input text as an answer.
+    /// </summary>
     class FreeTextQ_Model : IQuizQuestion
     {
         public string topic { get; set; }

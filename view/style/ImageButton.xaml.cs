@@ -4,6 +4,9 @@ using System.Windows.Input;
 
 namespace PinHoard.view.style
 {
+    /// <summary>
+    /// Represents a button control that displays a given image, simplifying xaml code
+    /// </summary>
     public partial class ImageButton : UserControl
     {
         public static readonly RoutedEvent ClickEvent =
@@ -58,7 +61,6 @@ namespace PinHoard.view.style
             set => SetValue(CommandParameterProperty, value);
         }
 
-        // NEW: MouseEnterCommand
         public static readonly DependencyProperty MouseEnterCommandProperty =
             DependencyProperty.Register("MouseEnterCommand", typeof(ICommand), typeof(ImageButton));
 
@@ -77,7 +79,6 @@ namespace PinHoard.view.style
             set => SetValue(MouseEnterCommandParameterProperty, value);
         }
 
-        // NEW: MouseLeaveCommand
         public static readonly DependencyProperty MouseLeaveCommandProperty =
             DependencyProperty.Register("MouseLeaveCommand", typeof(ICommand), typeof(ImageButton));
 
@@ -96,7 +97,6 @@ namespace PinHoard.view.style
             set => SetValue(MouseLeaveCommandParameterProperty, value);
         }
 
-        // Existing dependency properties
         public static readonly DependencyProperty ImageSourceProperty =
             DependencyProperty.Register("ImageSource", typeof(string), typeof(ImageButton));
 

@@ -4,7 +4,7 @@ using System.Windows;
 namespace PinHoard
 {
     /// <summary>
-    /// Interaction logic for Window1.xaml
+    /// Represents a temporary window that prompts the user to enter a filename when a new file is being created
     /// </summary>
     public partial class FileSaveWindow : Window
     {
