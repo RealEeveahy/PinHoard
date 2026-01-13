@@ -18,15 +18,14 @@ namespace PinHoard.viewmodel.menus
     /// </summary>
     public class Main_ViewModel : INotifyPropertyChanged
     {
-        public ObservableCollection<string> boardnames = new ObservableCollection<string>();
-        public int fileCount => boardnames.Count();
+        public ObservableCollection<string> boardnames { get; set; } = new ObservableCollection<string>();
+        public ObservableCollection<FileWidget> FileWidgets { get; set; } = new ObservableCollection<FileWidget>();
+        //public int fileCount => boardnames.Count();
 
         readonly List<int> selectedBoards = new List<int>();
 
         // Due to change. Render the most recent boards instead.
         private readonly string boardPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "boards");
-        public FileWidget ShowFile(int index) { return new FileWidget(PinHoardHelpers.CutExtension(boardnames[index]), index, this); }
-        public BoardSelectWidget ShowSelectable(int index) { return new BoardSelectWidget(PinHoardHelpers.CutExtension(boardnames[index]), index, UpdateSelection); }
         public Main_ViewModel()
         {
             LoadAllBoards();
@@ -40,29 +39,31 @@ namespace PinHoard.viewmodel.menus
             foreach (var file in directoryInfo.GetFiles("*.json"))
             {
                 boardnames.Add(file.Name);
+                FileWidgets.Add(new FileWidget(new FileWidget_ViewModel(file.Name)));
             }
         }
-        public void UpdateSelection(int index, bool remove = false)
+        public void UpdateSelection(string filename, bool remove = false)
         {
+            int index = boardnames.IndexOf(filename);
             if (remove) selectedBoards.Remove(index);
             else selectedBoards.Add(index);
         }
-        public void OpenBoard(int index)
+        public void OpenBoard(string filename)
         {
-            Board_ViewModel _board = new Board_ViewModel(new Board(boardnames[index]));
+            Board_ViewModel _board = new Board_ViewModel(new Board(filename));
             _board.ReloadMain = LoadAllBoards;
         }
-        public void ModifyBoard(int index)
+        public void ModifyBoard(string filename)
         {
-            string board = boardnames[index];
+            string board = filename;
             string thisFullPath = Path.Combine(boardPath, board);
 
-            SettingsWindow settingsWindow = new(board, index, DeleteBoard);
+            SettingsWindow settingsWindow = new(board, DeleteBoard);
             settingsWindow.ShowDialog();
         }
-        public void DeleteBoard(int index)
+        public void DeleteBoard(string filename)
         {
-            string board = boardnames[index];
+            string board = filename;
             string fullPath = Path.Combine(boardPath, board);
 
             File.Delete(fullPath);
@@ -93,7 +94,6 @@ namespace PinHoard.viewmodel.menus
                 return;
             }
 
-            // TODO: Code to start quiz here
             List<string> filenames = new List<string>();
             foreach (int i in selectedBoards)
                 filenames.Add(boardnames[i]);
@@ -121,6 +121,11 @@ namespace PinHoard.viewmodel.menus
                 filenames.Add(boardnames[i]);
 
             Board_ViewModel _board = new Board_ViewModel(new Board(filenames), true);
+        }
+        public void OpenSettings(object sender, RoutedEventArgs e)
+        {
+            PreferencesWindow prefs = new PreferencesWindow(this);
+            prefs.ShowDialog();
         }
         public event PropertyChangedEventHandler? PropertyChanged;
         protected void OnPropertyChanged([CallerMemberName] string? propertyName = null) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

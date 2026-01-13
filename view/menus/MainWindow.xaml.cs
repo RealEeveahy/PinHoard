@@ -1,4 +1,5 @@
-﻿using PinHoard.viewmodel.menus;
+﻿using PinHoard.view.menus;
+using PinHoard.viewmodel.menus;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
@@ -24,28 +25,25 @@ namespace PinHoard
             QuizButton.Click += viewModel.ConfigureRevision;
             ReviseTool.Click += viewModel.ConfigureRevision;
             CompileTool.Click += viewModel.ConfigureCompilation;
-
-            if (viewModel?.boardnames is INotifyCollectionChanged incc)
-            {
-                incc.CollectionChanged += Files_CollectionChanged;
-            }
-
-            Build(viewModel.boardnames);
+            SettingsTool.Click += viewModel.OpenSettings;
         }
-        private void Files_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        private void FileWidget_OpenRequested(object sender, RoutedEventArgs e)
         {
-            if (DataContext is Main_ViewModel vm)
-                Build(vm.boardnames);
-        }
-        void Build(IEnumerable<string>? boards)
-        {
-            BoardGrid.Children.Clear();
-
-            for (int i = 0; i < boards.Count(); i++)
+            var widget = e.OriginalSource as FileWidget;
+            if (widget != null)
             {
-                viewModel.ShowFile(i).SetParent(BoardGrid);
+                var vm = widget.DataContext as FileWidget_ViewModel;
+                viewModel.OpenBoard(vm.filename);
             }
-            if (BoardGrid.Children.Count > 0) NoBoardsLabel.Visibility = Visibility.Hidden;
+        }
+        private void FileWidget_SettingsRequest(object sender, RoutedEventArgs e)
+        {
+            var widget = e.OriginalSource as FileWidget;
+            if (widget != null)
+            {
+                var vm = widget.DataContext as FileWidget_ViewModel;
+                viewModel.ModifyBoard(vm.filename);
+            }
         }
     }
 }

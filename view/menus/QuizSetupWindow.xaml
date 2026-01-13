@@ -6,24 +6,45 @@
         xmlns:local="clr-namespace:PinHoard"
         mc:Ignorable="d"
         Title="Quiz Setup" Height="300" Width="650">
-    <Grid>
-        <Label x:Name="TitleLabel" Content="Select boards to revise." HorizontalAlignment="Left" Margin="20,20,0,0" VerticalAlignment="Top" Foreground="#FF223E5B" FontSize="16"/>
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
+        <Label x:Name="TitleLabel" Content="Select boards to revise." HorizontalAlignment="Left" Margin="20,20,0,0" 
+               VerticalAlignment="Top" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="16"/>
 
         <Grid x:Name="ScrollContainer" Margin="30,50" HorizontalAlignment="Left" Width="340">
-            <ScrollViewer x:Name="BoardSelectViewer" Background="#FFF7F7F7">
-                <StackPanel x:Name="SelectBoardPanel">
-
-                </StackPanel>
+            <ScrollViewer x:Name="BoardSelectViewer" MinHeight="300" Background="{DynamicResource SecondaryBackgroundBrush}">
+                <ItemsControl ItemsSource="{Binding boardnames}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal" Height="30">
+                                <CheckBox Name="BoardCheck" VerticalAlignment="Center" Tag="{Binding}"
+                                          Checked="BoardCheck_Checked" Unchecked="BoardCheck_Unchecked"/>
+                                <Label Content="{Binding}" Foreground="{DynamicResource PrimaryTextBrush}"
+                                       VerticalAlignment="Center" Margin="30,0,0,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                </ItemsControl>
             </ScrollViewer>
         </Grid>
 
-        <Label x:Name="FilterLabel" Margin="0,0,130,70" Content="Filter By" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Label x:Name="FilterLabel" Margin="0,0,130,70" Content="Filter By" Width="100" HorizontalContentAlignment="Right" 
+               HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <TextBox x:Name="FilterBox" Margin="0,0,20,75" Text="" HorizontalContentAlignment="Center" Width="100" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
 
-        <Label x:Name="QuestionCountLabel" Margin="0,0,130,45" Content="Questions" Width="100" HorizontalContentAlignment="Right" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
+        <Label x:Name="QuestionCountLabel" Margin="0,0,130,45" Content="Questions" Width="100" HorizontalContentAlignment="Right" 
+               HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="{DynamicResource PrimaryTextBrush}"/>
         <TextBox x:Name="QuestionCountBox" Margin="0,0,20,50" Text="10" HorizontalContentAlignment="Center" Width="100" Height="16" HorizontalAlignment="Right" VerticalAlignment="Bottom"/>
 
-        <Button x:Name="CloseButton" Content="Close" Margin="20,0,0,20" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="100" FontSize="12"/>
-        <Button x:Name="StartButton" Content="Start" Margin="0,0,20,20" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="100" FontSize="12"/>
+        <Button x:Name="CloseButton" Content="Close" Margin="20,0,0,20" HorizontalAlignment="Left" VerticalAlignment="Bottom" 
+                Width="100" FontSize="12" Background="{DynamicResource SecondaryButtonBackgroundBrush}"
+                Foreground="{DynamicResource PrimaryTextBrush}"/>
+        <Button x:Name="StartButton" Content="Start" Margin="0,0,20,20" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+                Width="100" FontSize="12" Background="{DynamicResource PrimaryButtonBackgroundBrush}"
+                Foreground="{DynamicResource PrimaryTextBrush}"/>
     </Grid>
 </Window>

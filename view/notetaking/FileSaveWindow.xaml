@@ -5,13 +5,16 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PinHoard"
         mc:Ignorable="d"
-        Title="Save File?" Height="200" Width="400" Background="#FFFCF8F3">
+        Title="Save File?" Height="200" Width="400" Background="{DynamicResource PrimaryBackgroundBrush}">
     <Grid x:Name="SaveGrid">
-        <Label x:Name="TitleLabel" Content="Enter a name for this board:" HorizontalAlignment="Left" Margin="20,25,0,0" VerticalAlignment="Top" Foreground="#FF223E5B" FontSize="18"/>
+        <Label x:Name="TitleLabel" Content="Enter a name for this board:" HorizontalAlignment="Left" Margin="20,25,0,0" VerticalAlignment="Top" Foreground="{DynamicResource PrimaryTextBrush}" FontSize="18"/>
         <TextBox x:Name="FilenameEntry" HorizontalAlignment="Left" VerticalAlignment="Center" Width="250" Height="20" Margin="20,0,0,0"/>
 
-        <Button x:Name="CancelButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Height="20" Margin="20,0,0,25" Content="Cancel"/>
-        <Button x:Name="SaveButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Height="20" Margin="20,0,120,25" Content="Save"/>
-        <Button x:Name="SaveCloseButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Height="20" Margin="0,0,20,25" Content="Save &amp; Close"/>
+        <Button x:Name="CancelButton" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="80" Height="20" Margin="20,0,0,25" 
+                Content="Cancel" Background="{DynamicResource SecondaryButtonBackgroundBrush}"/>
+        <Button x:Name="SaveButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Height="20" Margin="20,0,120,25" 
+                Content="Save" Background="{DynamicResource SecondaryButtonBackgroundBrush}"/>
+        <Button x:Name="SaveCloseButton" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="80" Height="20" Margin="0,0,20,25" 
+                Content="Save &amp; Close" Background="{DynamicResource SecondaryButtonBackgroundBrush}"/>
     </Grid>
 </Window>

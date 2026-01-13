@@ -5,8 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Media3D;
 
 namespace PinHoard.viewmodel
 {
@@ -42,7 +44,6 @@ namespace PinHoard.viewmodel
 
         public Action ReloadMain;
 
-        public double[] windowDimensions = new double[2] { 800, 700 };
         //private Size defaultPinSize = new Size(120, 120);
 
         public string displayName =>
@@ -65,10 +66,6 @@ namespace PinHoard.viewmodel
             ColourPicker = new ColourPicker_ViewModel(this);
 
             new BoardWindow(this).Show();
-        }
-        public void Build()
-        {
-
         }
         public void LoadPins()
         {
@@ -137,11 +134,6 @@ namespace PinHoard.viewmodel
                     pin.SetVisible(false);
             }
         }
-        public void SizeChanged(double[] newSize)
-        {
-            windowDimensions = newSize;
-            Build();
-        }
         public Cursor ToggleDebug()
         {
             debugging ^= true;
@@ -152,7 +144,11 @@ namespace PinHoard.viewmodel
             if (focusedPin != null)
                 focusedPin.ShowDebugInfo();
             else
-                PinHoardErrors.FocusError("Failed to initiate debug");
+                MessageBox.Show("Information about this Board: \n" +
+                    $"{model.boardName} (version {model.version})\n" +
+                    $"Total Pins    {allPinVMs.Count}({model.pinsInBoard})\n" +
+                    $"Read only?     {readOnly}",
+                    "Mae's debug tool (Board)");
         }
         public void SetFocus(Pin_ViewModel pin) { focusedPin = pin; }
         public void Save()

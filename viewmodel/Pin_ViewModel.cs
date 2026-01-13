@@ -93,7 +93,7 @@ namespace PinHoard.viewmodel
                 $"Logical Dimensions    {width} x {height}\n" +
                 //$"Physical Dimensions   {NoteGrid.ActualWidth} x {NoteGrid.ActualHeight}\n" +
                 $"Colour    {model.bgColour}\n" +
-                $"Components    \n{componentsAsString}", "Mae's debug tool");
+                $"Components    \n{componentsAsString}", "Mae's debug tool (Pin)");
         }
         public void InitComponent(string format)
         {

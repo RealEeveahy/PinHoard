@@ -8,7 +8,7 @@
         xmlns:v="clr-namespace:PinHoard.view.quiz.questions"
         mc:Ignorable="d"
         Title="Quiz" Height="600" Width="900">
-    <Grid>
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
             <RowDefinition Height="80"/>
@@ -33,15 +33,16 @@
         </ContentControl>
 
         <Grid Grid.Row="1" VerticalAlignment="Bottom">
-            <Label x:Name="ProgressLabel" Content="{Binding QuestionProgress}" FontSize="24" HorizontalAlignment="Left" Margin="20"/>
+            <Label x:Name="ProgressLabel" Content="{Binding QuestionProgress}" FontSize="24" 
+                   HorizontalAlignment="Left" Margin="20" Foreground="{DynamicResource PrimaryTextBrush}"/>
 
             <StackPanel Orientation="Horizontal" FlowDirection="RightToLeft" HorizontalAlignment="Right" Margin="20">
                 <Button x:Name="SubmitButton" Content="{Binding SubmitButtonContent}" FontSize="24" 
                     Width="150" Height="40"
-                    Foreground="White" Background="CornflowerBlue"/>
+                    Foreground="{DynamicResource PrimaryTextBrush}" Background="{DynamicResource PrimaryButtonBackgroundBrush}"/>
                 <Button x:Name="RetryButton" Content="Retry" FontSize="24" 
                     Width="150" Height="40" Margin="10,0,0,0" Visibility="{Binding RetryVisibility}"
-                    Foreground="White" Background="CornflowerBlue"/>
+                    Foreground="{DynamicResource PrimaryTextBrush}" Background="{DynamicResource PrimaryButtonBackgroundBrush}"/>
             </StackPanel>
         </Grid>
     </Grid>

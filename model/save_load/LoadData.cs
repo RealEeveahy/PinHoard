@@ -65,7 +65,7 @@ namespace PinHoard.model.save_load
                         //file is using deprecated format. place old code in LegacyLoad.cs each version change
                         v1_2SaveData? legacyData = JsonSerializer.Deserialize<v1_2SaveData>(json);
                         if (verbose)
-                            MessageBox.Show($"File was loaded in an older version. Please save the file to update.", "File load warning", MessageBoxButton.OK);
+                            PinHoardErrors.FileWarning("A newer version of PinHoard is available. Please save the file again to update.");
                         loadTo.version = data.version;
 
                         LegacyLoad nLL = new LegacyLoad(loadTo.version, legacyData, loadTo);

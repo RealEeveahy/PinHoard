@@ -1,9 +1,26 @@
 ﻿<Application x:Class="PinHoard.App"
+             Startup="Application_Startup"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:local="clr-namespace:PinHoard"
-             StartupUri="view/menus/MainWindow.xaml">
+             xmlns:properties="clr-namespace:PinHoard.Properties"
+             StartupUri="view/menus/MainWindow.xaml"
+             Exit="Application_Exit">
     <Application.Resources>
-         
+        <properties:Settings x:Key="Settings"/>
+        <SolidColorBrush x:Key="PrimaryBackgroundBrush" Color="#FFFFFF"/>
+        <SolidColorBrush x:Key="SecondaryBackgroundBrush" Color="#FAFAFA"/>
+        <SolidColorBrush x:Key="LightAccentBrush" Color="#9999DD"/>
+        <SolidColorBrush x:Key="DarkAccentBrush" Color="#3333AA"/>
+        <SolidColorBrush x:Key="PrimaryButtonBackgroundBrush" Color="#AAAAFF"/>
+        <SolidColorBrush x:Key="SecondaryButtonBackgroundBrush" Color="#CCCCCC"/>
+        <SolidColorBrush x:Key="DangerButtonBackgroundBrush" Color="OrangeRed"/>
+        <SolidColorBrush x:Key="PrimaryTextBrush" Color="#333366"/>
+        <SolidColorBrush x:Key="SecondaryTextBrush" Color="#666699"/>
+        <SolidColorBrush x:Key="HighlightTextBrush" Color="Blue"/>
+
+        <WindowState x:Key="DefaultWindowState">Normal</WindowState>
+        <Size x:Key="DefaultBoardSize" Height="700" Width="800"/>
+        
     </Application.Resources>
 </Application>

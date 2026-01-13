@@ -4,8 +4,10 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:PinHoard"
+        xmlns:menuctrl="clr-namespace:PinHoard.view.menus"
         mc:Ignorable="d"
-        Title="MainWindow" MinHeight="600" MinWidth="900" Background="#FFFCF8F3">
+        Title="MainWindow" MinHeight="600" MinWidth="900" Background="{DynamicResource PrimaryBackgroundBrush}"
+        WindowState="{DynamicResource DefaultWindowState}">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="NewTool" Header="_New"/>
@@ -20,18 +22,45 @@
                 <RowDefinition Height="*"/>
             </Grid.RowDefinitions>
             <Grid Grid.Row="0">
-                <Label x:Name="TitleLabel" Content="PinHoard: All your notes in one place" HorizontalAlignment="Left" Margin="20,23,0,0" VerticalAlignment="Top" Foreground="#FF223E5B" FontFamily="Segoe UI Black" FontSize="24"/>
-                <Button x:Name="QuizButton" Content="Revise" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,180,0" Foreground="#FF223E5B" Background="#FFFDC6B7" BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="20" Padding="3,3" Width="100" Height="35" />
-                <Button x:Name="NewBoardButton" Content="+  New Board" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,30,20,0" Foreground="#FF223E5B" Background="#FFF69176" BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="20" Padding="3,3" Height="35" Width="150" />
+                <Label x:Name="TitleLabel" Content="PinHoard: All your notes in one place" HorizontalAlignment="Left" 
+                       Margin="20,23,0,0" VerticalAlignment="Top" Foreground="{DynamicResource PrimaryTextBrush}" 
+                       FontFamily="Segoe UI Black" FontSize="24"/>
+                <Button x:Name="QuizButton" Content="Revise" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                        Margin="0,30,180,0" Foreground="{DynamicResource PrimaryTextBrush}" 
+                        Background="{DynamicResource SecondaryButtonBackgroundBrush}" 
+                        BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="20" Padding="3,3" Width="100" Height="35" />
+                <Button x:Name="NewBoardButton" Content="+  New Board" HorizontalAlignment="Right" VerticalAlignment="Top" 
+                        Margin="0,30,20,0" Foreground="{DynamicResource PrimaryTextBrush}" 
+                        Background="{DynamicResource PrimaryButtonBackgroundBrush}"
+                        BorderBrush="{x:Null}" FontFamily="Segoe UI Black" FontSize="20" Padding="3,3" Height="35" Width="150" />
             </Grid>
             <Grid x:Name="BoardContainer" Grid.Row="1" Margin="20,10,20,20">
-                <Border x:Name="BoardBackground" BorderThickness="1" Background="#FFF2E7D3" CornerRadius="10, 10, 10, 10"/>
+                <Border x:Name="BoardBackground" BorderThickness="1" Background="{DynamicResource SecondaryBackgroundBrush}" 
+                        CornerRadius="10, 10, 10, 10"/>
                 <ScrollViewer x:Name="BoardScrollViewer" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Disabled">
-                    <StackPanel x:Name="BoardGrid" MinHeight="400">
-                
-                    </StackPanel>
+                    <ItemsControl Name="FileViewer" ItemsSource="{Binding FileWidgets}" 
+                                  menuctrl:FileWidget.OpenRequested="FileWidget_OpenRequested"
+                                  menuctrl:FileWidget.SettingsRequested="FileWidget_SettingsRequest">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel MinHeight="400"/>
+                            </ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                    </ItemsControl>
                 </ScrollViewer>
-                <Label x:Name="NoBoardsLabel" Content="No boards yet." HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF223E5B" FontFamily="Segoe UI Light" FontSize="16"/>
+                <Label x:Name="NoBoardsLabel" Content="No boards yet." HorizontalAlignment="Center" VerticalAlignment="Center" 
+                       Foreground="{DynamicResource PrimaryTextBrush}" FontFamily="Segoe UI Light" FontSize="16">
+                    <Label.Style>
+                        <Style TargetType="Label">
+                            <Setter Property="Visibility" Value="Hidden"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding FileWidgets.Count}" Value="0">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Label.Style>
+                </Label>
             </Grid>
         </Grid>
     </DockPanel>

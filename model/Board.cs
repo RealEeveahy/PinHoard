@@ -20,10 +20,10 @@ namespace PinHoard.model
         {
 
         }
-        public Board(string boardName)
+        public Board(string filename)
         {
-            LoadData data = new LoadData(boardName, this);
-            this.boardName = PinHoardHelpers.CutExtension(boardName);
+            LoadData data = new LoadData(filename, this);
+            this.boardName = PinHoardHelpers.CutExtension(filename);
         }
         public Board(List<string> boardnames)
         {

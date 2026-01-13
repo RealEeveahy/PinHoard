@@ -12,12 +12,13 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
 
-        <TextBlock Text="{Binding QuestionText}" Foreground="Blue" FontSize="36" 
+        <TextBlock Text="{Binding QuestionText}" Foreground="{DynamicResource HighlightTextBrush}" FontSize="36" 
                         TextWrapping="Wrap" TextAlignment="Center" VerticalAlignment="Top"
                    Margin="10,40,10,20" Grid.Row="0"/>
 
         <StackPanel Grid.Row="1">
-            <Label Content="{Binding PromptText}" FontSize="36" HorizontalAlignment="Center" Margin="10"/>
+            <Label Content="{Binding PromptText}" FontSize="36" HorizontalAlignment="Center" Margin="10"
+                   Foreground="{DynamicResource PrimaryTextBrush}"/>
             <TextBox Text="{Binding UserAnswer, UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Center"
                      Width="500" Height="90" FontSize="20" 
                      HorizontalContentAlignment="Center" VerticalContentAlignment="Center"

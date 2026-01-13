@@ -1,5 +1,7 @@
 ﻿using PinHoard.viewmodel.menus;
+using System;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace PinHoard
 {
@@ -8,25 +10,24 @@ namespace PinHoard
     /// </summary>
     public partial class CompileSetupWindow : Window
     {
-        readonly Main_ViewModel viewModel;
         public CompileSetupWindow(Main_ViewModel vm)
         {
-            viewModel = vm;
+            DataContext = vm;
             InitializeComponent();
 
             StartButton.Click += vm.Compile;
-
-            Build();
         }
-        void Build()
-        {
-            for (int i = 0; i < viewModel.fileCount; i++)
-            {
-                viewModel.ShowSelectable(i).SetParent(SelectBoardPanel);
-            }
-            if (SelectBoardPanel.Children.Count > 0) MessageBox.Show("No boards to revise.");
 
-            this.Height = 600 + (30 * viewModel.fileCount);
+        private void BoardCheck_Checked(object sender, RoutedEventArgs e)
+        {
+            var s = (CheckBox)sender;
+            ((Main_ViewModel)DataContext).UpdateSelection(s.Tag.ToString());
+        }
+
+        private void BoardCheck_Unchecked(object sender, RoutedEventArgs e)
+        {
+            var s = (CheckBox)sender;
+            ((Main_ViewModel)DataContext).UpdateSelection(s.Tag.ToString(),true);
         }
     }
 }

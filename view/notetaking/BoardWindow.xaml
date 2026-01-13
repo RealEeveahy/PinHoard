@@ -8,7 +8,8 @@
         xmlns:vm="clr-namespace:PinHoard.viewmodel"
         xmlns:u="clr-namespace:PinHoard.view.notetaking"
         mc:Ignorable="d"
-        Title="BoardWindow" Height="700" Width="800">
+        Title="BoardWindow" Height="700" Width="800"
+        WindowState="{DynamicResource DefaultWindowState}">
     <DockPanel>
         <Menu DockPanel.Dock="Top">
             <MenuItem x:Name="FileDropdown" Header="_File">
@@ -28,7 +29,7 @@
                 <ColumnDefinition Width="80"/>
                 <ColumnDefinition Width="*"/>
             </Grid.ColumnDefinitions>
-            <DockPanel x:Name="LeftPanel" Grid.Column="0" Background="#FFF69176">
+            <DockPanel x:Name="LeftPanel" Grid.Column="0" Background="{DynamicResource LightAccentBrush}">
                 <StackPanel DockPanel.Dock="Top">
                     <DockPanel>
                         <c:ImageButton x:Name="NewEmptyButton" 
@@ -87,14 +88,14 @@
                 </DockPanel>
             </Grid>
             <Popup x:Name="PresetPopoutContainer" PlacementTarget="{Binding ElementName=NewEmptyButton}" StaysOpen="False" Placement="Right">
-                <StackPanel Orientation="Horizontal" Background="#FFF1623C">
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource DarkAccentBrush}">
                     <c:ImageButton x:Name="NewPinButton" Click="NewPinClicked" TagValue="single" ImageSource="/images/newPinGraphic.png"/>
                     <c:ImageButton x:Name="NewDefinitionButton" Click="NewPinClicked" TagValue="double" ImageSource="/images/newDefinitionGraphic.png"/>
                     <c:ImageButton x:Name="NewListButton" Click="NewPinClicked" TagValue="multi" ImageSource="/images/newListGraphic.png"/>
                 </StackPanel>
             </Popup>
             <Popup x:Name="ComponentPopoutContainer" PlacementTarget="{Binding ElementName=NewContentButton}" StaysOpen="False" Placement="Right">
-                <StackPanel Orientation="Horizontal" Background="#FFF1623C">
+                <StackPanel Orientation="Horizontal" Background="{DynamicResource DarkAccentBrush}">
                     <c:ImageButton x:Name="NewTitleButton" Click="NewComponentClicked" TagValue="title" ImageSource="/images/newTitleGraphic.png"/>
                     <c:ImageButton x:Name="NewBulletButton" Click="NewComponentClicked" TagValue="list" ImageSource="/images/newBulletPointGraphic.png"/>
                 </StackPanel>

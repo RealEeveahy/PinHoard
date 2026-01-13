@@ -8,7 +8,7 @@ namespace PinHoard
     /// </summary>
     public partial class SettingsWindow : Window
     {
-        public SettingsWindow(string filename, int index, Action<int> delete)
+        public SettingsWindow(string filename, Action<string> delete)
         {
             InitializeComponent();
             this.Title = $"{filename} Settings";
@@ -17,7 +17,7 @@ namespace PinHoard
 
             DeleteButton.Click += (sender, e) =>
             {
-                delete(index);
+                delete(filename);
                 this.Close();
             };
             CloseButton.Click += (sender, e) => { this.Close(); };

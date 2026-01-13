@@ -22,7 +22,7 @@ namespace PinHoard.view.quiz.questions
             {
                 if (b is not Button) continue;
 
-                SolidColorBrush deselected = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFDDDDDD"));
+                SolidColorBrush deselected = (SolidColorBrush)Application.Current.Resources["SecondaryButtonBackgroundBrush"];
                 ((Button)b).Background = deselected;
             }
         }
@@ -31,7 +31,7 @@ namespace PinHoard.view.quiz.questions
             ResetAll();
 
             // set selected button to selected color
-            ((Button)sender).Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FF6495ED"));
+            ((Button)sender).Background = (SolidColorBrush)Application.Current.Resources["PrimaryButtonBackgroundBrush"];
 
             // update VM with selected answer
             ((MultiChoiceQ_ViewModel)DataContext).UserAnswer = ((TextBlock)((Button)sender).Content).Text.ToString() ?? string.Empty;

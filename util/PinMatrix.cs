@@ -13,7 +13,7 @@ namespace PinHoard.util
         public PinMatrix()
         {
             //this.Orientation = Orientation.Horizontal;
-            this.Background = new SolidColorBrush((Color)ColorConverter.ConvertFromString("#FFF9F0E0"));
+            this.Background = (SolidColorBrush)Application.Current.Resources["SecondaryBackgroundBrush"];
         }
         public void Add(Pin_View item)
         {

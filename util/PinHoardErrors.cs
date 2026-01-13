@@ -27,5 +27,14 @@ namespace PinHoard.util
             MessageBox.Show($"{issue} : Please select a pin.", "Focus Error",
             MessageBoxButton.OK, MessageBoxImage.Warning);
         }
+
+        public static void PreferenceUpdateError(string issue)
+        { MessageBox.Show($"{issue}.", "Failed to Update Preferences", MessageBoxButton.OK, MessageBoxImage.Error); }
+
+
+        public static void FileWarning(string issue)
+        {
+            MessageBox.Show($"{issue}", "File Load Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+        }
     }
 }

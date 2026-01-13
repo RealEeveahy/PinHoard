@@ -13,7 +13,6 @@ namespace PinHoard
     {
         //public bool closeAfterSave = false; // changed by the fileSaveWindow
 
-        public double[] windowDimensions = new double[2] { 800, 700 };
         private readonly Board_ViewModel viewModel;
         public BoardWindow(Board_ViewModel vm)
         {
@@ -23,7 +22,8 @@ namespace PinHoard
 
             this.Title = vm.displayName;
 
-            this.SizeChanged += (sender, e) => { vm.SizeChanged(new double[2] { e.NewSize.Width, e.NewSize.Height }); };
+            this.Width = ((Size)Application.Current.Resources["DefaultBoardSize"]).Width;
+            this.Height = ((Size)Application.Current.Resources["DefaultBoardSize"]).Height;
 
             ColourPickerPopout.Target = ColourPickButton;
             PinScrollViewer.Content = vm.pinContainer;

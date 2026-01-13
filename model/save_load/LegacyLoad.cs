@@ -77,7 +77,7 @@ namespace PinHoard.model.save_load
         {
             List<v1_2PinObject>? contents = data.myPinObjects;
 
-            if (contents != null)
+            if (contents != null && contents.Count > 0)
             {
                 foreach (v1_2PinObject pdo in contents)
                 {
@@ -119,6 +119,10 @@ namespace PinHoard.model.save_load
                     }
                 }
             }
+            else
+            {
+                PinHoardErrors.FileWarning("No pins were found in the selected file.");
+            }
         }
         /// <summary>
         /// A format in which components are individually serialized, storing their format as a string.
@@ -131,7 +135,10 @@ namespace PinHoard.model.save_load
         public void LoadVersion1_2(v1_2SaveData data)
         {
             List<v1_2PinObject>? pinObjects = data.myPinObjects;
-            if (pinObjects == null) return;
+            if (pinObjects == null || pinObjects.Count == 0) {
+                PinHoardErrors.FileWarning("No pins were found in the selected file.");
+                return; 
+            }
 
             foreach (v1_2PinObject po in pinObjects)
             {
@@ -166,12 +173,13 @@ namespace PinHoard.model.save_load
     public class v1_2SaveData
     {
         public float version { get; set; }
-        public List<v1_2PinObject> myPinObjects = new();
+        public List<v1_2PinObject> myPinObjects { get; set; } = new();
         public List<string>? myPins { get; set; } // deprecated, v1_0
     }
     public class v1_2PinObject
     {
-        public List<SerializableComponent> myComponentObjects = new();
+        readonly int index;
+        public List<SerializableComponent> myComponentObjects { get; set; } = new();
         public string bgColour { get; set; } = "#FFFFFFFF";
         public List<string>? stringList { get; set; } // deprecated, v1_1
     }

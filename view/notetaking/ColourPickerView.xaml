@@ -8,7 +8,7 @@
     <Popup x:Name="ColourPickerPopout" PlacementTarget="{Binding Target, RelativeSource={RelativeSource AncestorType=UserControl}}" 
            IsOpen="{Binding ColourPickState, RelativeSource={RelativeSource AncestorType=UserControl}, Mode=TwoWay}"
            Placement="Bottom" StaysOpen="True">
-        <StackPanel Background="#FFEFEFEF">
+        <StackPanel Background="{DynamicResource PrimaryBackgroundBrush}">
             <Slider Value="{Binding R_Slider, Mode=TwoWay}"
                     Maximum="255" Width="120" Height="Auto" Margin="5,10"/>
             <Slider Value="{Binding G_Slider, Mode=TwoWay}" 

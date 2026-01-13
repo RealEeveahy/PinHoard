@@ -1,0 +1,22 @@
+﻿<UserControl x:Class="PinHoard.view.menus.FileWidget"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:PinHoard.view.menus" xmlns:style="clr-namespace:PinHoard.view.style"
+             mc:Ignorable="d" 
+             d:DesignHeight="60" d:DesignWidth="800" Margin="20,20,20,0" >
+    <Grid Background="{DynamicResource PrimaryBackgroundBrush}" Height="60">
+        <Border CornerRadius="20" BorderThickness="1"/>
+        <Label Content="{Binding FileDisplayName}" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="20,0" 
+               Foreground="{DynamicResource PrimaryTextBrush}"/>
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <style:ImageButton VerticalAlignment="Center" ImageSource="/images/miniSettingGraphic.png" 
+                               Background="{DynamicResource SecondaryButtonBackgroundBrush}"
+                               Margin="10,0" Click="SettingsButton_Click"/>
+            <Button VerticalAlignment="Center" Height="40" Width="60" BorderBrush="{x:Null}" Content="Open"
+                    Background="{DynamicResource PrimaryButtonBackgroundBrush}" Margin="0,0,10,0"
+                    Click="OpenButton_Click"/>
+        </StackPanel>
+    </Grid>
+</UserControl>
